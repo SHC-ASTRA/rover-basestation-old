@@ -1,3 +1,9 @@
+import { Container } from "react-bootstrap";
+
 function Base() {
-    return 'Base';
+    return (
+        <Container fluid>
+            
+        </Container>
+    );
 }
