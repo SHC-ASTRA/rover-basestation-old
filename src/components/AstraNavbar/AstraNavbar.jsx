@@ -1,5 +1,5 @@
-function AstraNavbar() {
-    return (<Navbar>
+import { Navbar } from 'react-bootstrap';
 
-    </Navbar>);
+function AstraNavbar() {
+    return <Navbar></Navbar>;
 }
