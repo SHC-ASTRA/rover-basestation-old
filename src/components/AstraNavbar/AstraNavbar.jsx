@@ -1,5 +1,13 @@
-import { Navbar } from 'react-bootstrap';
+import { Container, Navbar } from 'react-bootstrap';
 
 function AstraNavbar() {
-    return <Navbar></Navbar>;
+    return (
+        <Navbar className="bg-primary">
+            <Container>
+                <Navbar.Brand>ASTRA</Navbar.Brand>
+            </Container>
+        </Navbar>
+    );
 }
+
+export default AstraNavbar;
