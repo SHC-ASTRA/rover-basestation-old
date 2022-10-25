@@ -4,7 +4,7 @@ function AstraNavbar() {
     return (
         <Navbar className="bg-light" expand="md">
             <Container>
-                <Navbar.Brand className="">ASTRA</Navbar.Brand>
+                <Navbar.Brand>ASTRA</Navbar.Brand>
                 <Navbar.Toggle aria-controls="astra-navbar-nav" />
                 <Navbar.Collapse id="astra-navbar-nav">
                     <Nav className="me-auto">
