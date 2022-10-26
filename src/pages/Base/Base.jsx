@@ -4,7 +4,7 @@ import AstraNavbar from '../../components/AstraNavbar/AstraNavbar';
 function Base() {
     return (
         <Container className="p-0" fluid>
-            <AstraNavbar />
+                <AstraNavbar />
         </Container>
     );
 }

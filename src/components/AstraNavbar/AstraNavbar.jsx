@@ -1,18 +1,29 @@
 import { Container, Nav, Navbar } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 
 function AstraNavbar() {
     return (
-        <Navbar className="bg-light" expand="md">
+        <Navbar className="bg-primary" expand="md">
             <Container>
                 <Navbar.Brand>ASTRA</Navbar.Brand>
                 <Navbar.Toggle aria-controls="astra-navbar-nav" />
                 <Navbar.Collapse id="astra-navbar-nav">
                     <Nav className="me-auto">
-                        <Nav.Link>Status</Nav.Link>
-                        <Nav.Link>Rover Control</Nav.Link>
-                        <Nav.Link>Arm Control</Nav.Link>
-                        <Nav.Link>Biosensor Control</Nav.Link>
-                        <Nav.Link>Autonomous Control</Nav.Link>
+                        <LinkContainer to="/">
+                            <Nav.Link>Status</Nav.Link>
+                        </LinkContainer>
+                        <LinkContainer to="/Rover-Control">
+                            <Nav.Link>Rover Control</Nav.Link>
+                        </LinkContainer>
+                        <LinkContainer to='/Arm-Control'>
+                            <Nav.Link>Arm Control</Nav.Link>
+                        </LinkContainer>
+                        <LinkContainer to='/Biosensor-Control'>
+                            <Nav.Link>Biosensor Control</Nav.Link>
+                        </LinkContainer>
+                        <LinkContainer to='/Autonomous-Control'>
+                            <Nav.Link>Autonomous Control</Nav.Link>
+                        </LinkContainer>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
