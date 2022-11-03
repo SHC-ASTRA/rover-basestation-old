@@ -6,7 +6,7 @@ function AstraNavbar() {
     return (
         <Navbar className="bg-primary" expand="md">
             <Container>
-                <Navbar.Brand>ASTRA</Navbar.Brand>
+                <Navbar.Brand className="text-white">ASTRA</Navbar.Brand>
                 <Navbar.Toggle aria-controls="astra-navbar-nav" />
                 <Navbar.Collapse id="astra-navbar-nav">
                     <Nav className="me-auto">
@@ -27,7 +27,7 @@ function AstraNavbar() {
                         </LinkContainer>
                     </Nav>
                 </Navbar.Collapse>
-                <Navbar.Text>
+                <Navbar.Text className="text-white">
                     <NavbarRosStatus />
                 </Navbar.Text>
             </Container>
