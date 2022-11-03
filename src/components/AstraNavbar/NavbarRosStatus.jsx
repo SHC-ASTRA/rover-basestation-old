@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useContext, useState } from 'react';
 import ros from '../../utilities/ROS/ROS';
 import { RosContext } from '../../utilities/ROS/RosContext';
