@@ -1,7 +1,6 @@
-import React from 'react';
-import { Ros } from 'roslib';
+import 'roslib/build/roslib';
 
-var ros = new Ros();
+var ros = new ROSLIB.Ros();
 
 ros.on('connection', () => {
     console.log('Connected to ROSBridge Server.');
@@ -15,4 +14,4 @@ ros.on('close', () => {
     console.log('Connection to ROSBridge Server closed.');
 });
 
-export const RosContext = React.createContext(ros);
+export default ros;

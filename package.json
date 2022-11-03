@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
+    "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+    "@rollup/plugin-inject": "^5.0.2",
     "bootstrap": "^5.2.2",
+    "buffer": "^6.0.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",

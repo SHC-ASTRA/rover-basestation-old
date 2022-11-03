@@ -1,5 +1,6 @@
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import NavbarRosStatus from './NavbarRosStatus';
 
 function AstraNavbar() {
     return (
@@ -15,17 +16,20 @@ function AstraNavbar() {
                         <LinkContainer to="/Rover-Control">
                             <Nav.Link>Rover Control</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to='/Arm-Control'>
+                        <LinkContainer to="/Arm-Control">
                             <Nav.Link>Arm Control</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to='/Biosensor-Control'>
+                        <LinkContainer to="/Biosensor-Control">
                             <Nav.Link>Biosensor Control</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to='/Autonomous-Control'>
+                        <LinkContainer to="/Autonomous-Control">
                             <Nav.Link>Autonomous Control</Nav.Link>
                         </LinkContainer>
                     </Nav>
                 </Navbar.Collapse>
+                <Navbar.Text>
+                    <NavbarRosStatus />
+                </Navbar.Text>
             </Container>
         </Navbar>
     );

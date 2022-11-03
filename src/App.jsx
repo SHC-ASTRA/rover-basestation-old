@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AstraNavbar from './components/AstraNavbar/AstraNavbar';
@@ -8,11 +6,11 @@ import RoverControl from './pages/Rover-Control/Rover-Control';
 import ArmControl from './pages/Arm-Control/Arm-Control';
 import BiosensorControl from './pages/Biosensor-Control/Biosensor-Control';
 import AutonomousControl from './pages/Autonomous-Control/Autonomous-Control';
-import { RosContext } from './utilities/ROS/ROS';
+import RosContextProvider from './utilities/ROS/RosContext';
 
 function App() {
     return (
-        <RosContext.Provider>
+        <RosContextProvider>
             <Router>
                 <AstraNavbar />
                 <Routes>
@@ -32,7 +30,7 @@ function App() {
                     ></Route>
                 </Routes>
             </Router>
-        </RosContext.Provider>
+        </RosContextProvider>
     );
 }
 
