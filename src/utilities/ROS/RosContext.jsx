@@ -15,7 +15,7 @@ function RosContextProvider({ children }) {
     useEffect(() => {
         ros.on('error', (error) => {
             console.log('error');
-            setRosState({ state: 'idle' });
+            setRosState({ state: 'error' });
         });
     }, []);
 
