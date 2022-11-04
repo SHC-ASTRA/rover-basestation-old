@@ -1,11 +1,12 @@
 import { useContext, useState } from 'react';
-import ros from '../../utilities/ROS/ROS';
 import { RosContext } from '../../utilities/ROS/RosContext';
 import { RecordCircleFill } from 'react-bootstrap-icons';
 import RosModal from '../RosModal/RosModal';
+import { Button } from 'react-bootstrap';
+import RosLogo from '../../assets/ros.svg';
 
 function NavbarRosStatus() {
-    const { rosState, rosError } = useContext(RosContext);
+    const { rosState } = useContext(RosContext);
     const [showModal, setShowModal] = useState(false);
 
     const openModal = () => setShowModal(true);
@@ -13,31 +14,18 @@ function NavbarRosStatus() {
 
     var statusColor, statusMessage;
 
-    if (rosError) {
-        statusColor = 'yellow';
-        statusMessage = 'Error';
-    } else if (rosState == 'Disconnected') {
+    if (rosState == 'Disconnected') {
         statusColor = 'red';
-        statusMessage = 'Disconnected';
     } else if (rosState == 'Connected') {
         statusColor = 'lime';
-        statusMessage = 'Connected';
     }
-
-    // var onClick = () => {
-    //     if (rosState == 'Disconnected') {
-    //         ros.connect('ws://localhost:9090');
-    //     } else if (rosState == 'Connected') {
-    //         ros.close();
-    //     }
-    // };
 
     return (
         <div>
-            <div onClick={openModal}>
+            <Button variant="light" onClick={openModal}>
                 <RecordCircleFill color={statusColor} size={20} />
-                <span>{statusMessage}</span>
-            </div>
+                <img src={RosLogo} height={30} className="ps-2" />
+            </Button>
             <RosModal show={showModal} closeModal={closeModal} />
         </div>
     );
