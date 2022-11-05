@@ -13,6 +13,7 @@ import { RosContext } from '../../utilities/ROS/RosContext';
 
 function RosModal({ show, closeModal }) {
     const { rosState } = useContext(RosContext);
+    
     // References to form inputs
     const webBridgeAddress = createRef();
     const webBridgePort = createRef();
@@ -47,6 +48,7 @@ function RosModal({ show, closeModal }) {
         connectButtonVariant = 'danger';
         connectButtonMessage = 'Disconnect';
     }
+
     const connectButtonClick = () => {
         if (rosState == 'Disconnected') {
             var url = `ws://${webBridgeAddress.current.value}:${webBridgePort.current.value}`;
