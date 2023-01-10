@@ -1,4 +1,4 @@
-import { Container } from 'react-bootstrap';
+import { Container, InputGroup, Form} from 'react-bootstrap';
 import { useState } from 'react'
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -8,15 +8,20 @@ function statusIndicator(name) {
     const [status, setStatus] = useState(true);
 
     return(
-        <div style = {{backgroundColor: status ? "green" : "red", width: "100%"}}>
-            {name}
+        <div>
+            <InputGroup className="mb-3" style = {{borderColor: "rgb(76, 76, 76)"}}>
+                <InputGroup.Text style = {{backgroundColor: status ? "rgb(40, 128, 40)" : "rgb(184, 50, 50)", width: "30px"}}></InputGroup.Text>
+                <Form.Control style = {{backgroundColor: "rgb(215, 215, 216)"}}
+                    value={name}
+                readOnly/>
+            </InputGroup>
         </div>
-    )
+    );
 }
 
 function diagnostics() {
     return(
-        <div className = "card">
+        <div className = "card" style = {{width: "25%", margin: "10px"}}>
             <h5 className="card-title text-center">
                 Diagnostics
             </h5>
@@ -36,8 +41,13 @@ function diagnostics() {
     )
 }
 
-function percentBar(name) {
+function percentBar(name, color) {
     const [percent, setPercent] = useState(40)
+
+    const barStyle = {
+        backgroundColor: color, 
+        padding: "2px"
+    }
 
     let rectHeight = 100 - percent
     rectHeight = rectHeight + "%"
@@ -47,30 +57,32 @@ function percentBar(name) {
             <h6 className="card-title text-center">
                 {name}
             </h6>
-            <svg className = "card-body" style = {{backgroundColor: "green", padding: "2px"}}>
+            <svg className = "card-body" style = {barStyle}>
                 <rect height = {rectHeight} width = "100%" style = {{fill: "rgb(255,255,255)"}}/>
             </svg>
-            {percent + "%"}
+            <div style = {{textAlign: "center"}}>
+                {percent + "%"}
+            </div>
         </div>
     )
 }
 
 function usage() {
     return(
-        <div className = "card">
+        <div className = "card" style = {{width: "25%", margin: "10px"}}>
             <h5 className="card-title text-center">
                 Usage
             </h5>
             <div className = "card-body">
                 <Row>
                     <Col>
-                        {percentBar("CPU")}
+                        {percentBar("CPU", "rgb(40, 128, 40)")}
                     </Col>
                     <Col>
-                        {percentBar("GPU")}
+                        {percentBar("GPU", "rgb(50, 50, 184)")}
                     </Col>
                     <Col>
-                        {percentBar("RAM")}
+                        {percentBar("RAM", "rgb(184, 50, 50)")}
                     </Col>
                 </Row>
             </div>
@@ -82,7 +94,7 @@ function gps() {
     const [metrics, setMetrics] = useState([0,0,0,0,0])
 
     return(
-        <div className = "card">
+        <div className = "card" style = {{width: "25%", margin: "10px"}}>
             <h5 className="card-title text-center">
                 GPS
             </h5>
@@ -113,7 +125,7 @@ function battery() {
     const [metrics, setMetrics] = useState([0,0]);
 
     return(
-        <div className = "card">
+        <div className = "card" style = {{width: "25%", margin: "10px"}}>
             <h5 className="card-title text-center">
                 Battery
             </h5>
@@ -131,63 +143,15 @@ function battery() {
     )
 }
 
-// function modeButtons(){
-//     const [mode, setMode] = useState("Manual");//replace with current rover mode 
-
-//     let styleBool = false;
-
-//     switch(mode){
-//         case "Auto":
-//             console.log("Auto");
-//             styleBool = true;
-//             break;
-//         case "Manual":
-//             console.log("Manual");
-//             styleBool = false;
-//             break;
-//         default:
-//             console.log("No option");
-//             break;
-//     }
-    
-//     return(
-//         <div className='card' style={{width: '21rem'}}>
-//             <h5 className="card-title text-center">Current Mode: {mode}</h5>
-//             <div className='card-body'>
-//                 <div className='modeButtons'>
-//                     <button onClick={()=>setMode("Auto")} style={{backgroundColor: styleBool ? "green" : '#696e69'}} className='selector'>Auto</button>
-//                     <button onClick={()=>setMode("Manual")} style={{backgroundColor: styleBool ? '#696e69' : "green"}} className='selector'>Manual</button>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
-
-
-
-
 function Status() {
     return (
-        <Container className = "p-2">
-            <Row>
-                <Col>
-                    {gps()}
-                </Col>
-                <Col>
-                    {usage()}
-                </Col>
-                <Col>
-                    {diagnostics()}
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    {battery()}
-                </Col> 
-                {/* <Col>
-                    {modeButtons()}
-                </Col> */}
-            </Row>
+        <Container className = "p-4">
+            <div className = "card-deck" style={{display: "flex" }}>
+                {gps()}
+                {usage()}
+                {diagnostics()}
+                {battery()}
+            </div>
         </Container>
     );
 }
