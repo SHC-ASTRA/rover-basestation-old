@@ -4,8 +4,8 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import './Status.css';
 
-function statusIndicator(name) {
-    const [status, setStatus] = useState(true);
+function diagnosticIndicator(name, inStatus) {
+    const [status, setStatus] = useState(inStatus);
 
     return(
         <div>
@@ -20,29 +20,31 @@ function statusIndicator(name) {
 }
 
 function diagnostics() {
+    const [status, setStatus] = useState([true, true, true, true, true, true, true, true])
+
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
             <h5 className="card-title text-center">
                 Diagnostics
             </h5>
             <div className = "card-body">
-                <div className = "d-grid gap-2">
-                    {statusIndicator("Coms")}
-                    {statusIndicator("Arm")}
-                    {statusIndicator("Bio Sensor")}
-                    {statusIndicator("Drone")}
-                    {statusIndicator("LiDar")}
-                    {statusIndicator("IMU")}
-                    {statusIndicator("Teensy")}
-                    {statusIndicator("Controller")}
+                <div className = "d-grid gap-1">
+                    {diagnosticIndicator("Coms", status[0])}
+                    {diagnosticIndicator("Arm", status[1])}
+                    {diagnosticIndicator("Bio Sensor", status[2])}
+                    {diagnosticIndicator("Drone", status[3])}
+                    {diagnosticIndicator("LiDar", status[4])}
+                    {diagnosticIndicator("IMU", status[5])}
+                    {diagnosticIndicator("Teensy", status[6])}
+                    {diagnosticIndicator("Controller", status[7])}
                 </div>
             </div>
         </div>
     )
 }
 
-function percentBar(name, color) {
-    const [percent, setPercent] = useState(40)
+function usageBar(name, color, inUsage) {
+    const [percent, setPercent] = useState(inUsage)
 
     const barStyle = {
         backgroundColor: color, 
@@ -53,7 +55,7 @@ function percentBar(name, color) {
     rectHeight = rectHeight + "%"
 
     return(
-        <div className = "card">
+        <div className = "card" style = {{width: "33%", margin: "3px"}}>
             <h6 className="card-title text-center">
                 {name}
             </h6>
@@ -68,26 +70,42 @@ function percentBar(name, color) {
 }
 
 function usage() {
+    const [usages, setUsages] = useState([40,50,60])
+
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
             <h5 className="card-title text-center">
                 Usage
             </h5>
             <div className = "card-body">
-                <Row>
-                    <Col>
-                        {percentBar("CPU", "rgb(40, 128, 40)")}
-                    </Col>
-                    <Col>
-                        {percentBar("GPU", "rgb(50, 50, 184)")}
-                    </Col>
-                    <Col>
-                        {percentBar("RAM", "rgb(184, 50, 50)")}
-                    </Col>
-                </Row>
+                <div className = "card-deck" style={{display: "flex" }}>
+                    {usageBar("CPU", "rgb(40, 128, 40)", usages[0])}
+                    {usageBar("GPU", "rgb(50, 50, 184)", usages[1])}
+                    {usageBar("RAM", "rgb(184, 50, 50)", usages[2])}
+                </div>
             </div>
         </div>
     )
+}
+
+function metric(name, nameColor, nameWidth, unit, inMetric) {
+    const [metric, setMetric] = useState(inMetric);
+
+    const nameStyle = {
+        backgroundColor: nameColor, 
+        width: nameWidth
+    }
+
+    return(
+        <div>
+            <InputGroup className="mb-3" style = {{borderColor: "rgb(76, 76, 76)"}}>
+                <InputGroup.Text style = {nameStyle}>{name}:</InputGroup.Text>
+                <Form.Control style = {{backgroundColor: "rgb(215, 215, 216)"}}
+                    value={metric+" "+unit}
+                readOnly/>
+            </InputGroup>
+        </div>
+    );
 }
 
 function gps() {
@@ -99,22 +117,12 @@ function gps() {
                 GPS
             </h5>
             <div className = "card-body">
-                <div className = "d-grid gap-2">
-                    <div>
-                        Latitude: {metrics[0]}°
-                    </div>
-                    <div>
-                        Longitude: {metrics[1]}°
-                    </div>
-                    <div>
-                        Altitude: {metrics[2]}m
-                    </div>
-                    <div>
-                        Accuracy: {metrics[3]}m
-                    </div>
-                    <div>
-                        Time: {metrics[4]}s
-                    </div>
+                <div className = "d-grid gap-1">
+                    {metric("Latitude", "rgb(184, 50, 184)", "101px", "°", metrics[0])}
+                    {metric("Longitude", "rgb(184, 50, 184)", "101px", "°", metrics[1])}
+                    {metric("Altitude", "rgb(184, 128, 50)", "101px", "m", metrics[2])}
+                    {metric("Accuracy", "rgb(184, 128, 50)", "101px", "m", metrics[3])}
+                    {metric("Time", "rgb(50, 128, 184)", "101px", "s", metrics[4])}
                 </div>
             </div>
         </div>
@@ -131,12 +139,8 @@ function battery() {
             </h5>
             <div className = "card-body">
                 <div className = "d-grid gap-2">
-                    <div>
-                        Charge: {metrics[0]}%
-                    </div>
-                    <div>
-                        Voltage: {metrics[1]}V
-                    </div>
+                    {metric("Charge", "rgb(184, 184, 50)", "83px", "%", metrics[0])}
+                    {metric("Voltage", "rgb(184, 184, 50)", "83px", "V", metrics[1])}
                 </div>
             </div>
         </div>
