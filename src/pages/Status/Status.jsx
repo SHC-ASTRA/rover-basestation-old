@@ -20,7 +20,7 @@ function diagnosticIndicator(name, inStatus) {
 }
 
 function diagnostics() {
-    const [status, setStatus] = useState([true, true, true, true, true, true, true])
+    const [status, setStatus] = useState([true, true, true, true, true, true, true, true])
 
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
@@ -36,6 +36,7 @@ function diagnostics() {
                     {diagnosticIndicator("LiDar", status[4])}
                     {diagnosticIndicator("IMU", status[5])}
                     {diagnosticIndicator("Teensy", status[6])}
+                    {diagnosticIndicator("Controller", status[7])}
                 </div>
             </div>
         </div>
