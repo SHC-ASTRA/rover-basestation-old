@@ -20,7 +20,7 @@ function diagnosticIndicator(name, inStatus) {
 }
 
 function diagnostics() {
-    const [status, setStatus] = useState([true, true, true, true, true, true, true, true])
+    const [status, setStatus] = useState([true, true, true, true, true, true, true])
 
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
@@ -29,14 +29,13 @@ function diagnostics() {
             </h5>
             <div className = "card-body">
                 <div className = "d-grid gap-1">
-                    {diagnosticIndicator("Coms", status[0])}
-                    {diagnosticIndicator("Arm", status[1])}
-                    {diagnosticIndicator("Bio Sensor", status[2])}
+                    {diagnosticIndicator("Communications", status[0])}
+                    {diagnosticIndicator("Arm Base", status[1])}
+                    {diagnosticIndicator("Biosensor", status[2])}
                     {diagnosticIndicator("Drone", status[3])}
                     {diagnosticIndicator("LiDar", status[4])}
                     {diagnosticIndicator("IMU", status[5])}
                     {diagnosticIndicator("Teensy", status[6])}
-                    {diagnosticIndicator("Controller", status[7])}
                 </div>
             </div>
         </div>
