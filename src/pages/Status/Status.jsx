@@ -1,7 +1,5 @@
 import { Container, InputGroup, Form} from 'react-bootstrap';
 import { useState } from 'react'
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import './Status.css';
 
 function diagnosticIndicator(name, inStatus) {
@@ -55,7 +53,7 @@ function usageBar(name, color, inUsage) {
     rectHeight = rectHeight + "%"
 
     return(
-        <div className = "card" style = {{width: "33%", margin: "3px"}}>
+        <div className = "card" style = {{width: "33%", backgroundColor: "rgb(215, 215, 216)", marginLeft: "2px", marginRight: "2px"}}>
             <h6 className="card-title text-center">
                 {name}
             </h6>
@@ -70,7 +68,7 @@ function usageBar(name, color, inUsage) {
 }
 
 function usage() {
-    const [usages, setUsages] = useState([40,50,60])
+    const [usages, setUsages] = useState([25,66,100])
 
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
@@ -78,7 +76,7 @@ function usage() {
                 Usage
             </h5>
             <div className = "card-body">
-                <div className = "card-deck" style={{display: "flex" }}>
+                <div className = "card-deck" style={{display: "flex"}}>
                     {usageBar("CPU", "rgb(40, 128, 40)", usages[0])}
                     {usageBar("GPU", "rgb(50, 50, 184)", usages[1])}
                     {usageBar("RAM", "rgb(184, 50, 50)", usages[2])}
