@@ -1,45 +1,50 @@
-import { Container } from 'react-bootstrap';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Container, Card, InputGroup, Form, ButtonGroup, Button } from 'react-bootstrap';
+import {useState} from 'react';
 
+function buttons(){
+    return(
+        <div>
+            <ButtonGroup style={{width: "100%"}}>
+                <Button>
+                    Post
+                </Button>
+                <Button>
+                    Gate
+                </Button>
+            </ButtonGroup>
+        </div>
+    );
+}
 
-// function modeButtons(){
-//     const [mode, setMode] = useState("Manual");//replace with current rover mode 
-
-//     let styleBool = false;
-
-//     switch(mode){
-//         case "Auto":
-//             console.log("Auto");
-//             styleBool = true;
-//             break;
-//         case "Manual":
-//             console.log("Manual");
-//             styleBool = false;
-//             break;
-//         default:
-//             console.log("No option");
-//             break;
-//     }
-    
-//     return(
-//         <div className='card' style={{width: '21rem'}}>
-//             <h5 className="card-title text-center">Current Mode: {mode}</h5>
-//             <div className='card-body'>
-//                 <div className='modeButtons'>
-//                     <button onClick={()=>setMode("Auto")} style={{backgroundColor: styleBool ? "green" : '#696e69'}} className='selector'>Auto</button>
-//                     <button onClick={()=>setMode("Manual")} style={{backgroundColor: styleBool ? '#696e69' : "green"}} className='selector'>Manual</button>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
-
+function coords() {
+    return(
+        <InputGroup className="mb-3">
+            <InputGroup.Text>Coordinates:</InputGroup.Text>
+            <Form.Control
+                placeholder="Latitude"
+            />
+            <InputGroup.Text>,</InputGroup.Text>
+            <Form.Control
+                placeholder="Longitude"
+            />
+        </InputGroup>
+    );
+}
 
 function AutonomousControl() {
     return (
-        <Container className = "p-2">
-            Autonomous
+        <Container className = "p-4">
+            <Card style = {{margin: "10px"}}>
+                <h3 className="card-title text-center" style = {{margin: "10px"}}>
+                    Autonomous Navigation Controls
+                </h3>
+                <div className = "card-body">
+                    <div className = "d-grid gap-1">
+                        {coords()}
+                        {buttons()}
+                    </div>
+                </div>
+            </Card>
         </Container>
     );
 }

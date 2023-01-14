@@ -22,7 +22,7 @@ function diagnostics() {
 
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-title text-center">
+            <h5 className="card-title text-center" style = {{margin: "5px"}}>
                 Diagnostics
             </h5>
             <div className = "card-body">
@@ -72,7 +72,7 @@ function usage() {
 
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-title text-center">
+            <h5 className="card-title text-center" style = {{margin: "5px"}}>
                 Usage
             </h5>
             <div className = "card-body">
@@ -111,7 +111,7 @@ function gps() {
 
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-title text-center">
+            <h5 className="card-title text-center" style = {{margin: "5px"}}>
                 GPS
             </h5>
             <div className = "card-body">
@@ -132,7 +132,7 @@ function battery() {
 
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-title text-center">
+            <h5 className="card-title text-center" style = {{margin: "5px"}}>
                 Battery
             </h5>
             <div className = "card-body">
@@ -148,7 +148,7 @@ function battery() {
 function Status() {
     return (
         <Container className = "p-4">
-            <div className = "card-deck" style={{display: "flex" }}>
+            <div className = "card-deck" style={{display: "flex"}}>
                 {gps()}
                 {usage()}
                 {diagnostics()}
