@@ -1,7 +1,28 @@
-import { Container, Card, InputGroup, Form, ButtonGroup, Button } from 'react-bootstrap';
+import { Container, Card, InputGroup, Form, ButtonGroup, Button, FormControl } from 'react-bootstrap';
 import {useState} from 'react';
 
-function buttons(){
+function statusUpdate() {
+    return(
+        <div>
+            <Form.Control readOnly/>
+        </div>
+    );
+}
+
+function stateButtons(){
+    return(
+        <ButtonGroup style={{width: "100%"}}>
+            <Button className="btn btn-success" style = {{width: "50%"}}>
+                Navigate
+            </Button>
+            <Button className="btn btn-danger" style = {{width: "50%"}}>
+                Abort
+            </Button>
+        </ButtonGroup>
+    );
+}
+
+function modeButtons(){
     return(
         <div>
             <ButtonGroup style={{width: "100%"}}>
@@ -12,14 +33,15 @@ function buttons(){
                     Gate
                 </Button>
             </ButtonGroup>
+            
         </div>
     );
 }
 
 function coords() {
     return(
-        <InputGroup className="mb-3">
-            <InputGroup.Text>Coordinates:</InputGroup.Text>
+        <InputGroup>
+            <InputGroup.Text>Coordinates</InputGroup.Text>
             <Form.Control
                 placeholder="Latitude"
             />
@@ -35,13 +57,15 @@ function AutonomousControl() {
     return (
         <Container className = "p-4">
             <Card style = {{margin: "10px"}}>
-                <h3 className="card-title text-center" style = {{margin: "10px"}}>
+                <h3 className="card-header text-center" style = {{marginBottom: "3px"}}>
                     Autonomous Navigation Controls
                 </h3>
                 <div className = "card-body">
-                    <div className = "d-grid gap-1">
+                    <div className = "d-grid gap-3">
                         {coords()}
-                        {buttons()}
+                        {modeButtons()}
+                        {stateButtons()}
+                        {statusUpdate()}
                     </div>
                 </div>
             </Card>

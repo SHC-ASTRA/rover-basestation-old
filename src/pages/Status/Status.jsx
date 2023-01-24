@@ -2,6 +2,19 @@ import { Container, InputGroup, Form} from 'react-bootstrap';
 import { useState } from 'react'
 import './Status.css';
 
+function rosStatus() {
+    return(
+        <div className = "card" style = {{width: "100%", margin: "10px"}}>
+            <h5 className = "card-header text-center">
+                ROS Feed
+            </h5>
+            <div className = "card-body">
+                <Form.Control readOnly/>
+            </div>
+        </div>
+    );
+}
+
 function diagnosticIndicator(name, inStatus) {
     const [status, setStatus] = useState(inStatus);
 
@@ -22,7 +35,7 @@ function diagnostics() {
 
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-title text-center" style = {{margin: "5px"}}>
+            <h5 className="card-header text-center">
                 Diagnostics
             </h5>
             <div className = "card-body">
@@ -54,7 +67,7 @@ function usageBar(name, color, inUsage) {
 
     return(
         <div className = "card" style = {{width: "33%", backgroundColor: "rgb(215, 215, 216)", marginLeft: "2px", marginRight: "2px"}}>
-            <h6 className="card-title text-center">
+            <h6 className="card-header text-center">
                 {name}
             </h6>
             <svg className = "card-body" style = {barStyle}>
@@ -72,7 +85,7 @@ function usage() {
 
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-title text-center" style = {{margin: "5px"}}>
+            <h5 className="card-header text-center">
                 Usage
             </h5>
             <div className = "card-body">
@@ -111,7 +124,7 @@ function gps() {
 
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-title text-center" style = {{margin: "5px"}}>
+            <h5 className="card-header text-center">
                 GPS
             </h5>
             <div className = "card-body">
@@ -132,11 +145,11 @@ function battery() {
 
     return(
         <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-title text-center" style = {{margin: "5px"}}>
+            <h5 className="card-header text-center">
                 Battery
             </h5>
             <div className = "card-body">
-                <div className = "d-grid gap-2">
+                <div className = "d-grid gap-1">
                     {metric("Charge", "rgb(184, 184, 50)", "83px", "%", metrics[0])}
                     {metric("Voltage", "rgb(184, 184, 50)", "83px", "V", metrics[1])}
                 </div>
@@ -153,6 +166,9 @@ function Status() {
                 {usage()}
                 {diagnostics()}
                 {battery()}
+            </div>
+            <div className = "card-deck" style={{display: "flex"}}>
+                {rosStatus()}
             </div>
         </Container>
     );
