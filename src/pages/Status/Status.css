@@ -1,0 +1,50 @@
+.Latitude {
+    width: 101px;
+    background: rgb(214, 58, 214);
+}
+
+.Longitude {
+    width: 101px;
+    background: rgb(214, 58, 214);
+}
+
+.Altitude {
+    width: 101px;
+    background: rgb(214, 150, 58);
+}
+
+.Accuracy {
+    width: 101px;
+    background: rgb(214, 150, 58);
+}
+
+.Time {
+    width: 101px;
+    background: rgb(58, 150, 214);
+}
+
+.Charge {
+    width: 83px;
+    background: rgb(214, 214, 58);
+}
+
+.Voltage {
+    width: 83px;
+    background: rgb(214, 214, 58);
+}
+
+.CPU {
+    background: rgb(40, 128, 40);
+}
+
+.GPU {
+    background: rgb(50, 50, 184);
+}
+
+.RAM {
+    background: rgb(184, 50, 50)
+}
+
+.indicator {
+    width: 30px;
+}

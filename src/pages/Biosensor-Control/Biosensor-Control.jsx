@@ -1,17 +1,17 @@
-import { Container, Card, InputGroup, Form, Button, ButtonGroup } from 'react-bootstrap';
+import { Container, Card, InputGroup, Form, Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 
 function inputDoubleSA(name, first, second) {
     return(
-        <InputGroup style = {{width: "100%"}}>
+        <InputGroup>
             <InputGroup.Text style = {{width: "152px"}}>{name}</InputGroup.Text>
             <Form.Control 
                 placeholder = "0.0"
                 type = "number"
             />
-            <Button className = "btn btn-success">
+            <Button className = "btn-success">
                 {first}
             </Button>
-            <Button className = "btn">
+            <Button className = "btn-danger">
                 {second}
             </Button>
         </InputGroup>
@@ -20,16 +20,16 @@ function inputDoubleSA(name, first, second) {
 
 function inputDouble(name, first, second) {
     return(
-        <InputGroup style = {{width: "100%"}}>
+        <InputGroup>
             <InputGroup.Text>{name}</InputGroup.Text>
             <Form.Control 
                 placeholder = "0.0"
                 type = "number"
             />
-            <Button className = "btn btn-success">
+            <Button className = "btn-success">
                 {first}
             </Button>
-            <Button className = "btn">
+            <Button className = "btn-danger">
                 {second}
             </Button>
         </InputGroup>
@@ -38,13 +38,13 @@ function inputDouble(name, first, second) {
 
 function inputRun(name) {
     return(
-        <InputGroup style = {{width: "100%"}}>
+        <InputGroup>
             <InputGroup.Text style = {{width: "80px"}}>{name}</InputGroup.Text>
             <Form.Control 
                 placeholder = "0.0"
                 type = "number"
             />
-            <Button className = "btn btn-success">
+            <Button className = "btn-success">
                 Run
             </Button>
         </InputGroup>
@@ -53,13 +53,13 @@ function inputRun(name) {
 
 function inputGoSA(name) {
     return(
-        <InputGroup style = {{width: "100%"}}>
+        <InputGroup>
             <InputGroup.Text style = {{width: "152px"}}>{name}</InputGroup.Text>
             <Form.Control 
                 placeholder = "0.0"
                 type = "number"
             />
-            <Button className = "btn btn-success">
+            <Button className = "btn-success">
                 Go
             </Button>
         </InputGroup>
@@ -68,13 +68,13 @@ function inputGoSA(name) {
 
 function inputGo(name) {
     return(
-        <InputGroup style = {{width: "100%"}}>
+        <InputGroup>
             <InputGroup.Text style = {{width: "137px"}}>{name}</InputGroup.Text>
             <Form.Control 
                 placeholder = "0.0"
                 type = "number"
             />
-            <Button className = "btn btn-success">
+            <Button className = "btn-success">
                 Go
             </Button>
         </InputGroup>
@@ -83,57 +83,57 @@ function inputGo(name) {
 
 function servosActuator() {
     return(
-        <Card style = {{margin: "10px"}}>
-        <h5 className="card-header text-center">
-            Servos and Actuator
-        </h5>
-        <div className = "card-body">
-            <div className = "d-grid gap-3">
-                {inputGoSA("Cup Servo 1")}
-                {inputGoSA("Cup Servo 2")}
-                {inputGoSA("Cup Servo 3")}
-                {inputGoSA("Capping Servo")}
-                {inputGoSA("Microscope Servo")}
-                {inputDoubleSA("Actuator", "Extend", "Retract")}
-            </div>
-        </div>
-    </Card>
+        <Card>
+            <Card.Header className = "h5">
+                Servos and Actuator
+            </Card.Header>
+            <Card.Body>
+                <div className = "d-grid">
+                    {inputGoSA("Cup Servo 1")}
+                    {inputGoSA("Cup Servo 2")}
+                    {inputGoSA("Cup Servo 3")}
+                    {inputGoSA("Capping Servo")}
+                    {inputGoSA("Microscope Servo")}
+                    {inputDoubleSA("Actuator", "Extend", "Retract")}
+                </div>
+            </Card.Body>
+        </Card>
     );
 }
 
 function fansPumps() {
     return(
-        <Card style = {{margin: "10px"}}>
-            <h5 className="card-header text-center">
+        <Card>
+            <Card.Header className = "h5">
                 Fans and Pumps
-            </h5>
-            <div className = "card-body">
-                <div className = "d-grid gap-3">
+            </Card.Header>
+            <Card.Body>
+                <div className = "d-grid">
                     {inputRun("Fan 1")}
                     {inputRun("Fan 2")}
                     {inputRun("Fan 3")}
                     {inputDouble("Pump 1", "Dispense", "Suction")}
                     {inputDouble("Pump 2", "Dispense", "Suction")}
-                    <ButtonGroup style = {{width: "100%"}}>
+                    <ButtonGroup>
                         <Button>
                             Purge Pumps
                         </Button>
                     </ButtonGroup>
                 </div>
-            </div>
+            </Card.Body>
         </Card>
     );
 }
 
 function carousel() {
     return(
-        <Card style = {{margin: "10px"}}>
-            <h5 className="card-header text-center">
+        <Card>
+            <Card.Header className = "h5">
                 Carousel
-            </h5>
-            <div className = "card-body">
-                <div className = "d-grid gap-3">
-                    <InputGroup style = {{width: "100%"}}>
+            </Card.Header>
+            <Card.Body>
+                <div className = "d-grid">
+                    <InputGroup>
                         <InputGroup.Text style = {{width: "137px"}}>Position</InputGroup.Text>
                         <Form.Control 
                             placeholder = "0.0"
@@ -141,42 +141,50 @@ function carousel() {
                     </InputGroup>
                     {inputGo("Absolute Target")}
                     {inputGo("Relative Target")}
-                    <InputGroup style = {{width: "100%"}}>
+                    <InputGroup>
                         <InputGroup.Text style = {{width: "137px"}}>Auto Relative</InputGroup.Text>
-                        <select className = "custom-select" style = {{width: "70px"}}>
-                            <option value="-1">From...</option>
-                            <option value="separator1">Separator 1</option>
-                            <option value="separator2">Separator 2</option>
-                            <option value="separator3">Separator 3</option>
-                            <option value="dosing1">Dosing 1</option>
-                            <option value="dosing2">Dosing 2</option>
-                            <option value="capping">Capping</option>
-                            <option value="observation">Observation</option>
-                        </select>
-                        <select className = "custom-select" style = {{width: "70px"}}>
-                            <option value="-1">To...</option>
-                            <option value="separator1">Separator 1</option>
-                            <option value="separator2">Separator 2</option>
-                            <option value="separator3">Separator 3</option>
-                            <option value="dosing1">Dosing 1</option>
-                            <option value="dosing2">Dosing 2</option>
-                            <option value="capping">Capping</option>
-                            <option value="observation">Observation</option>
-                        </select>
-                        <Button className="btn btn-success">
+                        <Dropdown>
+                            <Dropdown.Toggle variant = "warning">
+                                From
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item>Separator 1</Dropdown.Item>
+                                <Dropdown.Item>Separator 2</Dropdown.Item>
+                                <Dropdown.Item>Separator 3</Dropdown.Item>
+                                <Dropdown.Item>Dosing 1</Dropdown.Item>
+                                <Dropdown.Item>Dosing 2</Dropdown.Item>
+                                <Dropdown.Item>Capping</Dropdown.Item>
+                                <Dropdown.Item>Observation</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        <Dropdown>
+                            <Dropdown.Toggle variant = "warning">
+                                To
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item>Separator 1</Dropdown.Item>
+                                <Dropdown.Item>Separator 2</Dropdown.Item>
+                                <Dropdown.Item>Separator 3</Dropdown.Item>
+                                <Dropdown.Item>Dosing 1</Dropdown.Item>
+                                <Dropdown.Item>Dosing 2</Dropdown.Item>
+                                <Dropdown.Item>Capping</Dropdown.Item>
+                                <Dropdown.Item>Observation</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        <Button className="btn-success">
                             Go
                         </Button>
                     </InputGroup>
-                    <ButtonGroup style = {{width: "100%"}}>
-                        <Button className="btn btn-danger" style = {{width: "50%"}}>
+                    <ButtonGroup>
+                        <Button className="btn-info">
                             Previous Cuvette
                         </Button>
-                        <Button style = {{width: "50%"}}>
+                        <Button>
                             Next Cuvette
                         </Button>
                     </ButtonGroup>
                 </div>
-            </div>
+            </Card.Body>
         </Card>
     );
 }
@@ -184,7 +192,7 @@ function carousel() {
 function BiosensorControl() {
     return (
         <Container className="p-4">
-            <div className = "card-deck" style={{display: "flex"}}>
+            <div className = "card-deck">
                 {carousel()}
                 {fansPumps()}
                 {servosActuator()}

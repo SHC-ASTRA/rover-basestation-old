@@ -1,0 +1,30 @@
+.card {
+    margin: 10px;
+}
+
+.card-header {
+    text-align: center;
+}
+
+.card-footer {
+    text-align: center;
+
+.btn-group {
+    width: 100%;
+}
+
+.btn-group > .btn {
+    width: 50%;
+}
+
+.d-grid {
+    row-gap: 1rem;
+}
+
+.card-deck {
+    display: flex;
+}
+
+.feed {
+    height: 46vh;
+}

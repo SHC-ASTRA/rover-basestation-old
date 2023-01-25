@@ -1,17 +1,18 @@
-import { Container, InputGroup, Form} from 'react-bootstrap';
+import { Container, InputGroup, Form, CardGroup, Card} from 'react-bootstrap';
 import { useState } from 'react'
 import './Status.css';
 
-function rosStatus() {
+function rosFeed() {
     return(
-        <div className = "card" style = {{width: "100%", margin: "10px"}}>
-            <h5 className = "card-header text-center">
+        <Card style = {{width: "100%"}}>
+            <Card.Header className = "h5">
                 ROS Feed
-            </h5>
-            <div className = "card-body">
-                <Form.Control readOnly/>
-            </div>
-        </div>
+            </Card.Header>
+            <Card.Body>
+                <InputGroup.Text className = "feed">
+                </InputGroup.Text>
+            </Card.Body>
+        </Card>
     );
 }
 
@@ -20,9 +21,9 @@ function diagnosticIndicator(name, inStatus) {
 
     return(
         <div>
-            <InputGroup className="mb-3" style = {{borderColor: "rgb(76, 76, 76)"}}>
-                <InputGroup.Text style = {{backgroundColor: status ? "rgb(40, 128, 40)" : "rgb(184, 50, 50)", width: "30px"}}></InputGroup.Text>
-                <Form.Control style = {{backgroundColor: "rgb(215, 215, 216)"}}
+            <InputGroup>
+                <InputGroup.Text className = "indicator" style = {{backgroundColor: status ? "rgb(54, 146, 54)" : "rgb(198, 54, 54)"}}></InputGroup.Text>
+                <Form.Control
                     value={name}
                 readOnly/>
             </InputGroup>
@@ -31,15 +32,15 @@ function diagnosticIndicator(name, inStatus) {
 }
 
 function diagnostics() {
-    const [status, setStatus] = useState([true, true, true, true, true, true, true, true])
+    const [status, setStatus] = useState([true, true, false, true, true, false, true, true])
 
     return(
-        <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-header text-center">
+        <Card style = {{width: "25%"}}>
+            <Card.Header className = "h5">
                 Diagnostics
-            </h5>
-            <div className = "card-body">
-                <div className = "d-grid gap-1">
+            </Card.Header>
+            <Card.Body>
+                <div className = "d-grid">
                     {diagnosticIndicator("Communications", status[0])}
                     {diagnosticIndicator("Arm Base", status[1])}
                     {diagnosticIndicator("Biosensor", status[2])}
@@ -49,8 +50,8 @@ function diagnostics() {
                     {diagnosticIndicator("Teensy", status[6])}
                     {diagnosticIndicator("Controller", status[7])}
                 </div>
-            </div>
-        </div>
+            </Card.Body>
+        </Card>
     )
 }
 
@@ -59,24 +60,23 @@ function usageBar(name, color, inUsage) {
 
     const barStyle = {
         backgroundColor: color, 
-        padding: "2px"
     }
 
     let rectHeight = 100 - percent
     rectHeight = rectHeight + "%"
 
     return(
-        <div className = "card" style = {{width: "33%", backgroundColor: "rgb(215, 215, 216)", marginLeft: "2px", marginRight: "2px"}}>
-            <h6 className="card-header text-center">
+        <Card>
+            <Card.Header className = "h7">
                 {name}
-            </h6>
-            <svg className = "card-body" style = {barStyle}>
+            </Card.Header>
+            <svg style = {barStyle}>
                 <rect height = {rectHeight} width = "100%" style = {{fill: "rgb(255,255,255)"}}/>
             </svg>
-            <div style = {{textAlign: "center"}}>
+            <Card.Footer>
                 {percent + "%"}
-            </div>
-        </div>
+            </Card.Footer>
+        </Card>
     )
 }
 
@@ -84,18 +84,18 @@ function usage() {
     const [usages, setUsages] = useState([25,66,100])
 
     return(
-        <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-header text-center">
+        <Card style = {{width: "25%"}}>
+            <Card.Header className = "h5">
                 Usage
-            </h5>
-            <div className = "card-body">
-                <div className = "card-deck" style={{display: "flex"}}>
-                    {usageBar("CPU", "rgb(40, 128, 40)", usages[0])}
-                    {usageBar("GPU", "rgb(50, 50, 184)", usages[1])}
-                    {usageBar("RAM", "rgb(184, 50, 50)", usages[2])}
+            </Card.Header>
+            <Card.Body>
+                <div className = "card-deck" style = {{display: "flex"}}>
+                    {usageBar("CPU", "rgb(58, 158, 58)", usages[0])}
+                    {usageBar("GPU", "rgb(58, 58, 214)", usages[1])}
+                    {usageBar("RAM", "rgb(214, 58, 58)", usages[2])}
                 </div>
-            </div>
-        </div>
+            </Card.Body>
+        </Card>
     )
 }
 
@@ -109,10 +109,10 @@ function metric(name, nameColor, nameWidth, unit, inMetric) {
 
     return(
         <div>
-            <InputGroup className="mb-3" style = {{borderColor: "rgb(76, 76, 76)"}}>
+            <InputGroup>
                 <InputGroup.Text style = {nameStyle}>{name}:</InputGroup.Text>
-                <Form.Control style = {{backgroundColor: "rgb(215, 215, 216)"}}
-                    value={metric+" "+unit}
+                <Form.Control
+                    value = {metric + " " + unit}
                 readOnly/>
             </InputGroup>
         </div>
@@ -123,20 +123,20 @@ function gps() {
     const [metrics, setMetrics] = useState([0,0,0,0,0])
 
     return(
-        <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-header text-center">
+        <Card style = {{width: "25%"}}>
+            <Card.Header className = "h5">
                 GPS
-            </h5>
-            <div className = "card-body">
-                <div className = "d-grid gap-1">
-                    {metric("Latitude", "rgb(184, 50, 184)", "101px", "°", metrics[0])}
-                    {metric("Longitude", "rgb(184, 50, 184)", "101px", "°", metrics[1])}
-                    {metric("Altitude", "rgb(184, 128, 50)", "101px", "m", metrics[2])}
-                    {metric("Accuracy", "rgb(184, 128, 50)", "101px", "m", metrics[3])}
-                    {metric("Time", "rgb(50, 128, 184)", "101px", "s", metrics[4])}
+            </Card.Header>
+            <Card.Body>
+                <div className = "d-grid">
+                    {metric("Latitude", "rgb(214, 58, 214)", "101px", "°", metrics[0])}
+                    {metric("Longitude", "rgb(214, 58, 214)", "101px", "°", metrics[1])}
+                    {metric("Altitude", "rgb(214, 150, 58)", "101px", "m", metrics[2])}
+                    {metric("Accuracy", "rgb(214, 150, 58)", "101px", "m", metrics[3])}
+                    {metric("Time", "rgb(58, 150, 214)", "101px", "s", metrics[4])}
                 </div>
-            </div>
-        </div>
+            </Card.Body>
+        </Card>
     )
 }
 
@@ -144,31 +144,31 @@ function battery() {
     const [metrics, setMetrics] = useState([0,0]);
 
     return(
-        <div className = "card" style = {{width: "25%", margin: "10px"}}>
-            <h5 className="card-header text-center">
+        <Card style = {{width: "25%"}}>
+            <Card.Header className = "h5">
                 Battery
-            </h5>
-            <div className = "card-body">
-                <div className = "d-grid gap-1">
-                    {metric("Charge", "rgb(184, 184, 50)", "83px", "%", metrics[0])}
-                    {metric("Voltage", "rgb(184, 184, 50)", "83px", "V", metrics[1])}
+            </Card.Header>
+            <Card.Body>
+                <div className = "d-grid">
+                    {metric("Charge", "rgb(214, 214, 58)", "83px", "%", metrics[0])}
+                    {metric("Voltage", "rgb(214, 214, 58)", "83px", "V", metrics[1])}
                 </div>
-            </div>
-        </div>
+            </Card.Body>
+        </Card>
     )
 }
 
 function Status() {
     return (
         <Container className = "p-4">
-            <div className = "card-deck" style={{display: "flex"}}>
+            <div className = "card-deck">
                 {gps()}
                 {usage()}
                 {diagnostics()}
                 {battery()}
             </div>
-            <div className = "card-deck" style={{display: "flex"}}>
-                {rosStatus()}
+            <div className = "card-deck">
+                {rosFeed()}
             </div>
         </Container>
     );
