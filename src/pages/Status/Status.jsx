@@ -55,22 +55,18 @@ function diagnostics() {
     )
 }
 
-function usageBar(name, color, inUsage) {
+function usageBar(name, barColor, inUsage) {
     const [percent, setPercent] = useState(inUsage)
-
-    const barStyle = {
-        backgroundColor: color, 
-    }
 
     let rectHeight = 100 - percent
     rectHeight = rectHeight + "%"
 
     return(
-        <Card>
+        <Card style = {{width: "33%"}}>
             <Card.Header className = "h7">
                 {name}
             </Card.Header>
-            <svg style = {barStyle}>
+            <svg style = {{backgroundColor: barColor}}>
                 <rect height = {rectHeight} width = "100%" style = {{fill: "rgb(255,255,255)"}}/>
             </svg>
             <Card.Footer>
@@ -102,15 +98,10 @@ function usage() {
 function metric(name, nameColor, nameWidth, unit, inMetric) {
     const [metric, setMetric] = useState(inMetric);
 
-    const nameStyle = {
-        backgroundColor: nameColor, 
-        width: nameWidth
-    }
-
     return(
         <div>
             <InputGroup>
-                <InputGroup.Text style = {nameStyle}>{name}:</InputGroup.Text>
+                <InputGroup.Text style = {{width: nameWidth, backgroundColor: nameColor}}>{name}:</InputGroup.Text>
                 <Form.Control
                     value = {metric + " " + unit}
                 readOnly/>
