@@ -1,8 +1,8 @@
 import { Container, InputGroup, Form, Button, Card, Dropdown} from 'react-bootstrap';
 import { useState } from 'react';
 import { ZoomIn } from 'react-bootstrap-icons';
-
-
+import { MapContainer,TileLayer,useMap,Marker,Popup } from 'react-leaflet';
+import L from "leaflet";
 function controlMetric(name, unit, value) {
     return(
         <InputGroup>
@@ -57,6 +57,13 @@ function controlPanel() {
     );
 }
 
+function createRoverIcon(_iconSize){
+    return L.icon({
+        iconUrl: "./RoverTop.png",
+        iconSize: [_iconSize],
+    })
+}
+
 function map() {
     return(
         <Card style = {{width: "50%"}}>
@@ -64,9 +71,11 @@ function map() {
                 Map
             </Card.Header>
             <Card.Body>
-                <svg>
-                    <rect height = "100%" width = "100%" style = {{fill: "rgb(0, 0, 0)"}}></rect>
-                </svg>
+            <MapContainer center={[38.4063,-110.7918]} zoom={13} scrollWheelZoom={false} style={{height:300,width:500}}>
+                <TileLayer  url="./usgs/{z}/{x}/{y}.jpg"/>
+                <Marker position={[38.4063,-110.7918]} icon={createRoverIcon(21)}/> 
+            </MapContainer>  
+
             </Card.Body>
         </Card>
     );
