@@ -89,12 +89,12 @@ function usage() {
         setUsages([message.cpu_usage.toFixed(2), message.gpu_usage.toFixed(2), message.mem_usage.toFixed(2)])
     };
 
-    // performanceSub = new ROSLIB.Topic({
-    //     ros: ros,
-    //     name: '/jetson/performance_report',
-    //     messageType: 'jetson_performance_reporter/PerformanceReport',
-    // });
-    // performanceSub.subscribe(updateUsage)
+    performanceSub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/jetson/performance_report',
+        messageType: 'jetson_performance_reporter/PerformanceReport',
+    });
+    performanceSub.subscribe(updateUsage)
 
     return(
         <Card style = {{width: "25%"}}>
@@ -133,12 +133,12 @@ function gps() {
         setMetrics([message.latitude, message.longitude, message.altitude, message.horizontal_accuracy, message.timestamp])
     }; 
 
-    // gpsSub = new ROSLIB.Topic({
-    //     ros: ros,
-    //     name: '/teensy/gps',
-    //     messageType: 'embedded_controller_relay/NavSatReport',
-    // });
-    // gpsSub.subscribe(updateGPS)
+    gpsSub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/teensy/gps',
+        messageType: 'embedded_controller_relay/NavSatReport',
+    });
+    gpsSub.subscribe(updateGPS)
 
     return(
         <Card style = {{width: "25%"}}>
@@ -164,12 +164,12 @@ function battery() {
         setMetrics([message.batteryVoltage.toFixed(1), (message.batteryCharge * 100).toFixed(2)])
     };
 
-    // batterySub = new ROSLIB.Topic({
-    //     ros: ros,
-    //     name: '/teensy/battery_status',
-    //     messageType: 'embedded_controller_relay/BatteryReport',
-    // });
-    // batterySub.subscribe(updateBattery)
+    batterySub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/teensy/battery_status',
+        messageType: 'embedded_controller_relay/BatteryReport',
+    });
+    batterySub.subscribe(updateBattery)
 
     return(
         <Card style = {{width: "25%"}}>
@@ -189,23 +189,23 @@ function battery() {
 function Status() {
     
     
-    // rosout_sub = new ROSLIB.Topic({
-    //     ros: ros,
-    //     name: '/rosout',
-    //     messageType: 'rosgraph_msgs/Log'
-    // });
+    rosout_sub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/rosout',
+        messageType: 'rosgraph_msgs/Log'
+    });
 
-    // lidar_sub = new ROSLIB.Topic({
-    //     ros: ros,
-    //     name: '/scan',
-    //     messageType: 'sensor_msgs/LaserScan',
-    // });
+    lidar_sub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/scan',
+        messageType: 'sensor_msgs/LaserScan',
+    });
 
-    // nav_status_sub = new ROSLIB.Topic({
-    //     ros: ros,
-    //     name: '/navigation_status',
-    //     messageType: 'std_msgs/String'
-    // });
+    nav_status_sub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/navigation_status',
+        messageType: 'std_msgs/String'
+    });
 
     return (
         <Container className = "p-4">
