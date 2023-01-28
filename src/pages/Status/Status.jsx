@@ -2,6 +2,13 @@ import { Container, InputGroup, Form, CardGroup, Card} from 'react-bootstrap';
 import { useState } from 'react'
 import './Status.css';
 
+
+
+
+var lidar_sub;
+var rosout_sub;
+var nav_status_sub
+
 function rosFeed() {
     return(
         <Card style = {{width: "100%"}}>
@@ -32,7 +39,7 @@ function diagnosticIndicator(name, inStatus) {
 }
 
 function diagnostics() {
-    const [status, setStatus] = useState([true, true, false, true, true, false, true, true])
+    const [status, setStatus] = useState([false, false, false, false, false, false, false, false])
 
     return(
         <Card style = {{width: "25%"}}>
@@ -77,7 +84,17 @@ function usageBar(name, barColor, inUsage) {
 }
 
 function usage() {
-    const [usages, setUsages] = useState([25,66,100])
+    const [usages, setUsages] = useState([0,0,0])
+    const updateUsage = (message) => {
+        setUsages([message.cpu_usage.toFixed(2), message.gpu_usage.toFixed(2), message.mem_usage.toFixed(2)])
+    };
+
+    performanceSub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/jetson/performance_report',
+        messageType: 'jetson_performance_reporter/PerformanceReport',
+    });
+    performanceSub.subscribe(updateUsage)
 
     return(
         <Card style = {{width: "25%"}}>
@@ -112,6 +129,16 @@ function metric(name, nameColor, nameWidth, unit, inMetric) {
 
 function gps() {
     const [metrics, setMetrics] = useState([0,0,0,0,0])
+    const updateGPS = (message) => {
+        setMetrics([message.latitude, message.longitude, message.altitude, message.horizontal_accuracy, message.timestamp])
+    }; 
+
+    gpsSub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/teensy/gps',
+        messageType: 'embedded_controller_relay/NavSatReport',
+    });
+    gpsSub.subscribe(updateGPS)
 
     return(
         <Card style = {{width: "25%"}}>
@@ -133,6 +160,16 @@ function gps() {
 
 function battery() {
     const [metrics, setMetrics] = useState([0,0]);
+    const updateBattery = (message) => {
+        setMetrics([message.batteryVoltage.toFixed(1), (message.batteryCharge * 100).toFixed(2)])
+    };
+
+    batterySub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/teensy/battery_status',
+        messageType: 'embedded_controller_relay/BatteryReport',
+    });
+    batterySub.subscribe(updateBattery)
 
     return(
         <Card style = {{width: "25%"}}>
@@ -150,6 +187,26 @@ function battery() {
 }
 
 function Status() {
+    
+    
+    rosout_sub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/rosout',
+        messageType: 'rosgraph_msgs/Log'
+    });
+
+    lidar_sub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/scan',
+        messageType: 'sensor_msgs/LaserScan',
+    });
+
+    nav_status_sub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/navigation_status',
+        messageType: 'std_msgs/String'
+    });
+
     return (
         <Container className = "p-4">
             <div className = "card-deck">
@@ -159,7 +216,7 @@ function Status() {
                 {battery()}
             </div>
             <div className = "card-deck">
-                {rosFeed()}
+                {rosFeed(ros)}
             </div>
         </Container>
     );
