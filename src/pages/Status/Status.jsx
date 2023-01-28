@@ -1,22 +1,30 @@
 import { Container, InputGroup, Form, CardGroup, Card} from 'react-bootstrap';
 import { useState } from 'react'
 import './Status.css';
-
-
-
+import ros from '../../utilities/ROS/ROS'
 
 var lidar_sub;
-var rosout_sub;
-var nav_status_sub
 
 function rosFeed() {
+    const updateFeed = (message) => {
+        var log = new Date().toTimeString().split(' ')[0];
+        ROSFeed.val('[' + time + '] ' + log + ROSFeed.val());
+    };
+
+    var rosoutSub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/rosout',
+        messageType: 'rosgraph_msgs/Log'
+    });
+    rosoutSub.subscribe(updateFeed)
+
     return(
         <Card style = {{width: "100%"}}>
             <Card.Header className = "h5">
                 ROS Feed
             </Card.Header>
             <Card.Body>
-                <InputGroup.Text className = "feed">
+                <InputGroup.Text id = "ROSFeed" className = "feed">
                 </InputGroup.Text>
             </Card.Body>
         </Card>
@@ -89,7 +97,7 @@ function usage() {
         setUsages([message.cpu_usage.toFixed(2), message.gpu_usage.toFixed(2), message.mem_usage.toFixed(2)])
     };
 
-    performanceSub = new ROSLIB.Topic({
+    var performanceSub = new ROSLIB.Topic({
         ros: ros,
         name: '/jetson/performance_report',
         messageType: 'jetson_performance_reporter/PerformanceReport',
@@ -133,7 +141,7 @@ function gps() {
         setMetrics([message.latitude, message.longitude, message.altitude, message.horizontal_accuracy, message.timestamp])
     }; 
 
-    gpsSub = new ROSLIB.Topic({
+    var gpsSub = new ROSLIB.Topic({
         ros: ros,
         name: '/teensy/gps',
         messageType: 'embedded_controller_relay/NavSatReport',
@@ -164,7 +172,7 @@ function battery() {
         setMetrics([message.batteryVoltage.toFixed(1), (message.batteryCharge * 100).toFixed(2)])
     };
 
-    batterySub = new ROSLIB.Topic({
+    var batterySub = new ROSLIB.Topic({
         ros: ros,
         name: '/teensy/battery_status',
         messageType: 'embedded_controller_relay/BatteryReport',
@@ -187,26 +195,6 @@ function battery() {
 }
 
 function Status() {
-    
-    
-    rosout_sub = new ROSLIB.Topic({
-        ros: ros,
-        name: '/rosout',
-        messageType: 'rosgraph_msgs/Log'
-    });
-
-    lidar_sub = new ROSLIB.Topic({
-        ros: ros,
-        name: '/scan',
-        messageType: 'sensor_msgs/LaserScan',
-    });
-
-    nav_status_sub = new ROSLIB.Topic({
-        ros: ros,
-        name: '/navigation_status',
-        messageType: 'std_msgs/String'
-    });
-
     return (
         <Container className = "p-4">
             <div className = "card-deck">
