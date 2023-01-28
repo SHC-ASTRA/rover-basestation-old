@@ -1,18 +1,30 @@
 import { Container, InputGroup, Form, Button, Card, Dropdown} from 'react-bootstrap';
+import { useState } from 'react';
 import { ZoomIn } from 'react-bootstrap-icons';
 
 
-function controlMetric(name) {
+function controlMetric(name, unit, value) {
     return(
         <InputGroup>
             <InputGroup.Text style = {{width: "83px"}}>{name}</InputGroup.Text>
-            <Form.Control readOnly>
+            <Form.Control 
+                value = {value + " " + unit}
+            readOnly>
             </Form.Control>
         </InputGroup>
     );
 }
 
 function controlPanel() {
+    const [metrics, setMetrics] = useState([0.0, 0.0, 0.0])
+
+    const enableButtonClick = () => {
+        var controller = document.getElementById("controllerSelected")
+        var controllerText = controller.options[controller.selectedIndex].text
+
+        console.log("Enabling controller: " + controllerText)
+    };
+
     return(
         <Card>
             <Card.Header className = "h5">
@@ -21,25 +33,24 @@ function controlPanel() {
             <Card.Body>
                 <div className = "d-grid">
                     <svg>
-                        Top-down Diagram
+                        <rect height = "100%" width = "100%" style = {{fill: "rgb(0, 0, 0)"}}></rect>
                     </svg>
                     <InputGroup>
                         <InputGroup.Text>Controller</InputGroup.Text>
-                        <Dropdown>
-                            <Dropdown.Toggle variant = "warning">
-                                Choose
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                <Dropdown.Item>N/A</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        <Button className = "btn-success">
+                        <Form.Select id = "controllerSelected">
+                            <option value = "0">N/A</option>
+                            <option value = "1">Example 1</option>
+                        </Form.Select>
+                        <Button 
+                            onClick = {enableButtonClick}
+                            className = "btn-success"
+                        >
                             Enable
                         </Button>
                     </InputGroup>
-                    {controlMetric("Voltage:")}
-                    {controlMetric("Range:")}
-                    {controlMetric("Speed:")}
+                    {controlMetric("Voltage:", "V", metrics[0])}
+                    {controlMetric("Range:", "?", metrics[1])}
+                    {controlMetric("Speed:", "?", metrics[2])}
                 </div>
             </Card.Body>
         </Card>
@@ -54,7 +65,7 @@ function map() {
             </Card.Header>
             <Card.Body>
                 <svg>
-                    Map
+                    <rect height = "100%" width = "100%" style = {{fill: "rgb(0, 0, 0)"}}></rect>
                 </svg>
             </Card.Body>
         </Card>
@@ -81,11 +92,11 @@ function orientation() {
             <Card.Body>
                 <div className = "d-grid">
                     <svg>
-                        Roll Diagram
+                        <rect height = "100%" width = "100%" style = {{fill: "rgb(0, 0, 0)"}}></rect>
                     </svg>
                     {orientationSlider("Roll")}
                     <svg>
-                        Pitch Diagram
+                        <rect height = "100%" width = "100%" style = {{fill: "rgb(0, 0, 0)"}}></rect>
                     </svg>
                     {orientationSlider("Pitch")}
                 </div>

@@ -22,7 +22,7 @@ function AutonomousControl() {
 
     const navigateButtonClick = () => {
         updateCoordState(latitude, longitude)
-        console.log("Coords: (" + latitude.current.value + ", " + longitude.current.value + ")")
+        console.log("Coords: " + latitude.current.value + "°, " + longitude.current.value + "°")
         console.log("Going to coordinates...")
     };
 

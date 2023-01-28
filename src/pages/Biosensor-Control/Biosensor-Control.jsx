@@ -149,69 +149,14 @@ function fansPumps() {
 function carousel() {
     const [pos, setPos] = useState(0.0)
     const [targets, setTargets] = useState([useRef(), useRef()])
-    const [autoRel, setAutoRel] = useState(["From", "To"])
-    const [autoRelAbrv, setAutoRelAbrv] = useState(["From", "To"])
-
-    function fromOptionClick(index, name) {
-        if (index == 0) {
-            setAutoRel([name, autoRel[1]])
-            switch(name) {
-                case "Separator 1":
-                    setAutoRelAbrv(["S...1", autoRelAbrv[1]])
-                    break
-                case "Separator 2":
-                    setAutoRelAbrv(["S...2", autoRelAbrv[1]])
-                    break
-                case "Separator 3":
-                    setAutoRelAbrv(["S...3", autoRelAbrv[1]])
-                    break
-                case "Dosing 1":
-                    setAutoRelAbrv(["D...1", autoRelAbrv[1]])
-                    break
-                case "Dosing 2":
-                    setAutoRelAbrv(["D...2", autoRelAbrv[1]])
-                    break
-                case "Capping":
-                    setAutoRelAbrv(["Ca...", autoRelAbrv[1]])
-                    break
-                case "Observation":
-                    setAutoRelAbrv(["Ob...", autoRelAbrv[1]])
-                    break
-                default:
-                    break
-            }
-        } else if (index == 1) {
-            setAutoRel([autoRel[0], name])
-            switch(name) {
-                case "Separator 1":
-                    setAutoRelAbrv([autoRelAbrv[0], "S...1"])
-                    break
-                case "Separator 2":
-                    setAutoRelAbrv([autoRelAbrv[0], "S...2"])
-                    break
-                case "Separator 3":
-                    setAutoRelAbrv([autoRelAbrv[0], "S...3"])
-                    break
-                case "Dosing 1":
-                    setAutoRelAbrv([autoRelAbrv[0], "D...1"])
-                    break
-                case "Dosing 2":
-                    setAutoRelAbrv([autoRelAbrv[0], "D...2"])
-                    break
-                case "Capping":
-                    setAutoRelAbrv([autoRelAbrv[0], "Ca..."])
-                    break
-                case "Observation":
-                    setAutoRelAbrv([autoRelAbrv[0], "Ob..."])
-                    break
-                default:
-                    break
-            }
-        }
-    };
 
     const autoRelButtonClick = () => {
-        console.log("Going from " + autoRel[0] + " to " + autoRel[1] + "...")
+        var from = document.getElementById("autoFrom")
+        var fromText = from.options[from.selectedIndex].text
+        var to = document.getElementById("autoTo")
+        var toText = to.options[to.selectedIndex].text
+
+        console.log("Targetting relatively from " + fromText + " to " + toText + "...")
     };
 
     const prevCuvButtonClick = () => {
@@ -239,62 +184,26 @@ function carousel() {
                     {inputGo("Relative Target", targets[1], "137px")}
                     <InputGroup>
                         <InputGroup.Text style = {{width: "137px"}}>Auto Relative</InputGroup.Text>
-                        <Dropdown>
-                            <Dropdown.Toggle variant = "warning">
-                                {autoRelAbrv[0]}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(0, "Separator 1")}
-                                >Separator 1</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(0, "Separator 2")}
-                                >Separator 2</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(0, "Separator 3")}
-                                >Separator 3</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(0, "Dosing 1")}
-                                >Dosing 1</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(0, "Dosing 2")}
-                                >Dosing 2</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(0, "Capping")}
-                                >Capping</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(0, "Observation")}
-                                >Observation</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
-                        <Dropdown>
-                            <Dropdown.Toggle variant = "warning">
-                                {autoRelAbrv[1]}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(1, "Separator 1")}
-                                >Separator 1</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(1, "Separator 2")}
-                                >Separator 2</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(1, "Separator 3")}
-                                >Separator 3</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(1, "Dosing 1")}
-                                >Dosing 1</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(1, "Dosing 2")}
-                                >Dosing 2</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(1, "Capping")}
-                                >Capping</Dropdown.Item>
-                                <Dropdown.Item
-                                    onClick = {() => fromOptionClick(1, "Observation")}
-                                >Observation</Dropdown.Item>
-                            </Dropdown.Menu>
-                        </Dropdown>
+                        <Form.Select id = "autoFrom">
+                            <option value = "From">From</option>
+                            <option value = "Separator 1">Separator 1</option>
+                            <option value = "Separator 1">Separator 2</option>
+                            <option value = "Separator 1">Separator 3</option>
+                            <option value = "Dosing 1">Dosing 1</option>
+                            <option value = "Dosing 2">Dosing 2</option>
+                            <option value = "Capping">Capping</option>
+                            <option value = "Observation">Observation</option>
+                        </Form.Select>
+                        <Form.Select id = "autoTo">
+                            <option value = "To">To</option>
+                            <option value = "Separator 1">Separator 1</option>
+                            <option value = "Separator 1">Separator 2</option>
+                            <option value = "Separator 1">Separator 3</option>
+                            <option value = "Dosing 1">Dosing 1</option>
+                            <option value = "Dosing 2">Dosing 2</option>
+                            <option value = "Capping">Capping</option>
+                            <option value = "Observation">Observation</option>
+                        </Form.Select>
                         <Button 
                             className="btn-success"
                             onClick = {autoRelButtonClick}
