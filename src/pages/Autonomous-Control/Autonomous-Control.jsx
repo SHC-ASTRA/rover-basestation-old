@@ -1,49 +1,104 @@
-import { Container, Card, InputGroup, Form, ButtonGroup, Button } from 'react-bootstrap';
-import {useState} from 'react';
-
-function buttons(){
-    return(
-        <div>
-            <ButtonGroup style={{width: "100%"}}>
-                <Button>
-                    Post
-                </Button>
-                <Button>
-                    Gate
-                </Button>
-            </ButtonGroup>
-        </div>
-    );
-}
-
-function coords() {
-    return(
-        <InputGroup className="mb-3">
-            <InputGroup.Text>Coordinates:</InputGroup.Text>
-            <Form.Control
-                placeholder="Latitude"
-            />
-            <InputGroup.Text>,</InputGroup.Text>
-            <Form.Control
-                placeholder="Longitude"
-            />
-        </InputGroup>
-    );
-}
+import { Container, Card, InputGroup, Form, ButtonGroup, Button, FormControl, FormGroup } from 'react-bootstrap';
+import { createRef, useEffect, useState } from 'react';
+import './Autonomous-Control.css';
 
 function AutonomousControl() {
+    const latitude = createRef();
+    const longitude = createRef();
+
+    const [coordState, setCoordState] = useState({
+        latitude: 0,
+        longitude: 0,
+    });
+
+    const updateCoordState = (lat, long) => {
+        if (lat.current) {
+            setCoordState({
+                latitude: lat.current.value,
+                longitude: long.current.value,
+            });
+        }
+    };
+
+    const navigateButtonClick = () => {
+        updateCoordState(latitude, longitude)
+        console.log("Coords: " + latitude.current.value + "°, " + longitude.current.value + "°")
+        console.log("Going to coordinates...")
+    };
+
+    const abortButtonClick = () => {
+        updateCoordState(latitude, longitude)
+        console.log("Autonomous mode aborting...")
+    };
+
+    const postButtonClick = () => {
+        updateCoordState(latitude, longitude)
+        console.log("IDK what this does...")
+    };
+
+    const gateButtonClick = () => {
+        updateCoordState(latitude, longitude)
+        console.log("IDK what this does...")
+    };
+
     return (
         <Container className = "p-4">
-            <Card style = {{margin: "10px"}}>
-                <h3 className="card-title text-center" style = {{margin: "10px"}}>
-                    Autonomous Navigation Controls
-                </h3>
-                <div className = "card-body">
-                    <div className = "d-grid gap-1">
-                        {coords()}
-                        {buttons()}
+            <Card>
+                <Card.Header className = "h5">
+                    Autonomous Controls
+                </Card.Header>
+                <Card.Body>
+                    <div className = "d-grid">
+                        <InputGroup>
+                            <InputGroup.Text>Coordinates</InputGroup.Text>
+                            <Form.Control 
+                                name = "latitude"
+                                type = "number"
+                                ref = {latitude}
+                                defaultValue = {coordState.latitude}
+                            />
+                            <InputGroup.Text>°,</InputGroup.Text>
+                            <Form.Control 
+                                name = "longitude"
+                                type = "number"
+                                ref = {longitude}
+                                defaultValue = {coordState.longitude}
+                            />
+                            <InputGroup.Text>°</InputGroup.Text>
+                        </InputGroup>
+                        <ButtonGroup>
+                            <Button 
+                                className = "btn-info"
+                                onClick = {postButtonClick}
+                            >
+                                Post
+                            </Button>
+                            <Button
+                                onClick = {gateButtonClick}
+                            >
+                                Gate
+                            </Button>
+                        </ButtonGroup>
+                        <ButtonGroup>
+                            <Button 
+                                className="btn-success"
+                                onClick = {navigateButtonClick}
+                            >
+                                Navigate
+                            </Button>
+                            <Button 
+                                className="btn-danger"
+                                onClick = {abortButtonClick}
+                            >
+                                Abort
+                            </Button>
+                        </ButtonGroup>
+                        <InputGroup.Text 
+                            className = "feed"
+                        >
+                        </InputGroup.Text>
                     </div>
-                </div>
+                </Card.Body>
             </Card>
         </Container>
     );
