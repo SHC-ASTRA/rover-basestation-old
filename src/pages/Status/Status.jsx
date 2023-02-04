@@ -38,16 +38,15 @@ function rosFeed() {
                 <textarea
                     id="ROSFeed"
                     className="feed form-control"
-                    defaultValue={log}
+                    value={log}
+                    readOnly
                 ></textarea>
             </Card.Body>
         </Card>
     );
 }
 
-function diagnosticIndicator(name, inStatus) {
-    const [status, setStatus] = useState(inStatus);
-
+function diagnosticIndicator(name, status) {
     return (
         <div>
             <InputGroup>
@@ -96,10 +95,8 @@ function diagnostics() {
     );
 }
 
-function usageBar(name, barColor, inUsage) {
-    const [percent, setPercent] = useState(inUsage);
-
-    let rectHeight = 100 - percent;
+function usageBar(name, barColor, usage) {
+    let rectHeight = 100 - usage;
     rectHeight = rectHeight + '%';
 
     return (
@@ -112,27 +109,34 @@ function usageBar(name, barColor, inUsage) {
                     style={{ fill: 'rgb(255,255,255)' }}
                 />
             </svg>
-            <Card.Footer>{percent + '%'}</Card.Footer>
+            <Card.Footer>{usage + '%'}</Card.Footer>
         </Card>
     );
 }
 
 function usage() {
     const [usages, setUsages] = useState([0, 0, 0]);
-    const updateUsage = (message) => {
-        setUsages([
-            message.cpu_usage.toFixed(2),
-            message.gpu_usage.toFixed(2),
-            message.mem_usage.toFixed(2),
-        ]);
-    };
+    
+    useEffect(() => {
+        const updateUsage = (message) => {
+            setUsages([
+                message.cpu_usage.toFixed(2),
+                message.gpu_usage.toFixed(2),
+                message.mem_usage.toFixed(2),
+            ]);
+        };
 
-    // var performanceSub = new ROSLIB.Topic({
-    //     ros: ros,
-    //     name: '/jetson/performance_report',
-    //     messageType: 'jetson_performance_reporter/PerformanceReport',
-    // });
-    // performanceSub.subscribe(updateUsage)
+        var performanceSub = new ROSLIB.Topic({
+            ros: ros,
+            name: '/jetson/performance_report',
+            messageType: 'jetson_performance_reporter/PerformanceReport',
+        });
+        performanceSub.subscribe(updateUsage)
+
+        return () => {
+            performanceSub.unsubscribe();
+        };
+    }, []);
 
     return (
         <Card style={{ width: '25%' }}>
@@ -148,9 +152,7 @@ function usage() {
     );
 }
 
-function metric(name, nameColor, nameWidth, unit, inMetric) {
-    const [metric, setMetric] = useState(inMetric);
-
+function metric(name, nameColor, nameWidth, unit, metric) {
     return (
         <div>
             <InputGroup>
@@ -167,22 +169,29 @@ function metric(name, nameColor, nameWidth, unit, inMetric) {
 
 function gps() {
     const [metrics, setMetrics] = useState([0, 0, 0, 0, 0]);
-    const updateGPS = (message) => {
-        setMetrics([
-            message.latitude,
-            message.longitude,
-            message.altitude,
-            message.horizontal_accuracy,
-            message.timestamp,
-        ]);
-    };
+    
+    useEffect(() => {
+        const updateGPS = (message) => {
+            setMetrics([
+                message.latitude,
+                message.longitude,
+                message.altitude,
+                message.horizontal_accuracy,
+                message.timestamp,
+            ]);
+        };
 
-    // var gpsSub = new ROSLIB.Topic({
-    //     ros: ros,
-    //     name: '/teensy/gps',
-    //     messageType: 'embedded_controller_relay/NavSatReport',
-    // });
-    // gpsSub.subscribe(updateGPS)
+        var gpsSub = new ROSLIB.Topic({
+            ros: ros,
+            name: '/teensy/gps',
+            messageType: 'embedded_controller_relay/NavSatReport',
+        });
+        gpsSub.subscribe(updateGPS)
+
+        return () => {
+            gpsSub.unsubscribe();
+        };
+    }, []);
 
     return (
         <Card style={{ width: '25%' }}>
@@ -232,19 +241,26 @@ function gps() {
 
 function battery() {
     const [metrics, setMetrics] = useState([0, 0]);
-    const updateBattery = (message) => {
-        setMetrics([
-            message.batteryVoltage.toFixed(1),
-            (message.batteryCharge * 100).toFixed(2),
-        ]);
-    };
 
-    // var batterySub = new ROSLIB.Topic({
-    //     ros: ros,
-    //     name: '/teensy/battery_status',
-    //     messageType: 'embedded_controller_relay/BatteryReport',
-    // });
-    // batterySub.subscribe(updateBattery)
+    useEffect(() => {
+        const updateBattery = (message) => {
+            setMetrics([
+                message.batteryVoltage.toFixed(1),
+                (message.batteryCharge * 100).toFixed(2),
+            ]);
+        };
+
+        var batterySub = new ROSLIB.Topic({
+            ros: ros,
+            name: '/teensy/battery_status',
+            messageType: 'embedded_controller_relay/BatteryReport',
+        });
+        batterySub.subscribe(updateBattery)
+
+        return () => {
+            batterySub.unsubscribe();
+        };
+    }, []);
 
     return (
         <Card style={{ width: '25%' }}>
