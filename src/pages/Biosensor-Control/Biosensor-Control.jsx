@@ -306,12 +306,6 @@ function servosActuator() {
                             Retract
                         </Button>
                     </InputGroup>
-                    {inputGo("Cup Servo 1", servos[0], "152px")}
-                    {inputGo("Cup Servo 2", servos[1], "152px")}
-                    {inputGo("Cup Servo 3", servos[2], "152px")}
-                    {inputGo("Capping Servo", servos[3], "152px")}
-                    {inputGo("Microscope Servo", servos[4], "152px")}
-                    {inputDouble("Actuator", "Extend", "Retract", actuatorVal, "152px")}
                 </div>
             </Card.Body>
         </Card>
