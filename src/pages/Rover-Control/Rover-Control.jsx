@@ -32,9 +32,7 @@ function controlPanel() {
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
-                    <svg>
-                        <rect height = "100%" width = "100%" style = {{fill: "rgb(0, 0, 0)"}}></rect>
-                    </svg>
+                    <img src = "./RoverTop.png" style={{height:"200px", width:"200px"}}/>
                     <InputGroup>
                         <InputGroup.Text>Controller</InputGroup.Text>
                         <Form.Select id = "controllerSelected">
@@ -93,6 +91,7 @@ function orientationSlider(name) {
 }
 
 function orientation() {
+    
     return(
         <Card style = {{width: "25%"}}>
             <Card.Header className = "h5">
@@ -100,13 +99,13 @@ function orientation() {
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
-                    <svg>
-                        <rect height = "100%" width = "100%" style = {{fill: "rgb(0, 0, 0)"}}></rect>
-                    </svg>
+                    
+                    <img src = {"./RoverBack.png"} style = {{width: "100px", height:"50px",transform:['rotate(${45deg})']}} />
+                    
                     {orientationSlider("Roll")}
-                    <svg>
-                        <rect height = "100%" width = "100%" style = {{fill: "rgb(0, 0, 0)"}}></rect>
-                    </svg>
+                    
+                    <img src = {"./roverSide.png"} style={{width: "100px", height:"100px"}}/>
+                    
                     {orientationSlider("Pitch")}
                 </div>
             </Card.Body>
