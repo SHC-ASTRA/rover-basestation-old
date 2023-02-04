@@ -159,13 +159,91 @@ function servosActuator() {
 }
 
 function fansPumps() {
-    const [fans, setTargets] = useState([useRef(), useRef(), useRef()])
     const [pumps, setPumps] = useState([useRef(), useRef()])
+
+    const sendCommand = (cmd) => {
+        var request = new ROSLIB.ServiceRequest({
+          command: cmd
+        });
+        cmdClient.callService(request);
+    }
+
+    const fanOneButtonClick = () => {
+        var fanOne = document.getElementById("fan1")
+        var fanOneVal = fanOne.value
+
+        console.log("Setting Fan 1 runtime to " + fanOneVal + " seconds...")
+
+        var runtime = fanOneVal
+        sendCommand("f1 " + runtime)
+    }
+
+    const fanTwoButtonClick = () => {
+        var fanTwo = document.getElementById("fan2")
+        var fanTwoVal = fanTwo.value
+
+        console.log("Setting Fan 2 runtime to " + fanTwoVal + " seconds...")
+
+        var runtime = fanTwoVal
+        sendCommand("f2 " + runtime)
+    }
+
+    const fanThreeButtonClick = () => {
+        var fanThree = document.getElementById("fan3")
+        var fanThreeVal = fanThree.value
+
+        console.log("Setting Fan 3 runtime to " + fanThreeVal + " seconds...")
+
+        var runtime = fanThreeVal
+        sendCommand("f3 " + runtime)
+    }
+
+    const dispenseOneButtonClick = () => {
+        var dispenseOne = document.getElementById("pump1")
+        var dispenseOneVal = dispenseOne.value
+
+        console.log("Dispensing for " + dispenseOneVal + " seconds...")
+        
+        var runtime = dispenseOneVal
+        sendCommand("p1 " + runtime)
+    }
+    
+
+    const suctionOneButtonClick = () => {
+        var suctionOne = document.getElementById("pump1")
+        var suctionOneVal = suctionOne.value
+
+        console.log("Suctioning for " + suctionOneVal + " seconds...")
+
+        var runtime = suctionOneVal
+        sendCommand("p1 -" + runtime)
+    };
+
+    const dispenseTwoButtonClick = () => {
+        var dispenseTwo = document.getElementById("pump2")
+        var dispenseTwoVal = dispenseTwo.value
+
+        console.log("Dispensing for " + dispenseTwoVal + " seconds...")
+        
+        var runtime = dispenseTwoVal
+        sendCommand("p2 " + runtime)
+    }
+
+    const suctionTwoButtonClick = () => {
+        var suctionTwo = document.getElementById("pump2")
+        var suctionTwoVal = suctionTwo.value
+
+        console.log("Suctioning for " + suctionTwoVal + " seconds...")
+
+        var runtime = suctionTwoVal
+        sendCommand("p2 -" + runtime)
+    };
 
     const purgeButtonClick = () => {
         console.log("Purging pumps...")
+        sendCommand("pp")
     };
-    
+
     var cmdClient = new ROSLIB.Service({
         ros: ros,
         name: '/bio/bio_command',
@@ -179,11 +257,88 @@ function fansPumps() {
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
-                    {inputRun("Fan 1", fans[0], "80px")}
-                    {inputRun("Fan 2", fans[1], "80px")}
-                    {inputRun("Fan 3", fans[2], "80px")}
-                    {inputDouble("Pump 1", "Dispense", "Suction", pumps[0], "80px")}
-                    {inputDouble("Pump 2", "Dispense", "Suction", pumps[1], "80px")}
+                    <InputGroup>
+                        <InputGroup.Text style = {{width: "80px"}}>Fan 1</InputGroup.Text>
+                        <Form.Control 
+                            id = "fan1"
+                            defaultValue = "0.0"
+                            type = "number"
+                        />
+                        <Button 
+                            className = "btn-success"
+                            onClick = {fanOneButtonClick}
+                        >
+                            Run
+                        </Button>
+                    </InputGroup>
+                    <InputGroup>
+                        <InputGroup.Text style = {{width: "80px"}}>Fan 2</InputGroup.Text>
+                        <Form.Control 
+                            id = "fan2"
+                            defaultValue = "0.0"
+                            type = "number"
+                        />
+                        <Button 
+                            className = "btn-success"
+                            onClick = {fanTwoButtonClick}
+                        >
+                            Run
+                        </Button>
+                    </InputGroup>
+                    <InputGroup>
+                        <InputGroup.Text style = {{width: "80px"}}>Fan 3</InputGroup.Text>
+                        <Form.Control 
+                            id = "fan3"
+                            defaultValue = "0.0"
+                            type = "number"
+                        />
+                        <Button 
+                            className = "btn-success"
+                            onClick = {fanThreeButtonClick}
+                        >
+                            Run
+                        </Button>
+                    </InputGroup>
+                    <InputGroup>
+                        <InputGroup.Text style = {{width: "80px"}}>Pump 1</InputGroup.Text>
+                        <Form.Control 
+                            id = "pump1"
+                            defaultValue = "0.0"
+                            type = "number"
+                        />
+                        <Button 
+                            className = "btn-success"
+                            onClick = {dispenseOneButtonClick}
+                        >
+                            Dispense
+                        </Button>
+                        <Button 
+                            className = "btn-danger"
+                            onClick = {suctionOneButtonClick}
+                        >
+                            Suction
+                        </Button>
+                    </InputGroup>
+                    <InputGroup>
+                        <InputGroup.Text style = {{width: "80px"}}>Pump 2</InputGroup.Text>
+                        <Form.Control 
+                            id = "pump2"
+                            defaultValue = "0.0"
+                            type = "number"
+                        />
+                        <Button 
+                            className = "btn-success"
+                            onClick = {dispenseTwoButtonClick}
+                        >
+                            Dispense
+                        </Button>
+                        <Button 
+                            className = "btn-danger"
+                            onClick = {suctionTwoButtonClick}
+                        >
+                            Suction
+                        </Button>
+                    </InputGroup>
                     <ButtonGroup>
                         <Button 
                             onClick = {purgeButtonClick}
