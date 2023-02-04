@@ -7,8 +7,8 @@ var lidar_sub;
 
 function rosFeed() {
     const updateFeed = (message) => {
-        var log = new Date().toTimeString().split(' ')[0];
-        ROSFeed.val('[' + time + '] ' + log + ROSFeed.val());
+        var time = new Date().toTimeString().split(' ')[0];
+        ROSFeed.val('[' + time + '] ' + message + '\n' + ROSFeed.val());
     };
 
     var rosoutSub = new ROSLIB.Topic({
