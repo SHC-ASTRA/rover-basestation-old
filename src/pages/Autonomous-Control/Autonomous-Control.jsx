@@ -1,6 +1,7 @@
 import { Container, Card, InputGroup, Form, ButtonGroup, Button, FormControl, FormGroup } from 'react-bootstrap';
 import { createRef, useEffect, useState } from 'react';
 import './Autonomous-Control.css';
+import ros from '../../utilities/ROS/ROS'
 
 function AutonomousControl() {
     const latitude = createRef();
@@ -20,17 +21,6 @@ function AutonomousControl() {
         }
     };
 
-    const navigateButtonClick = () => {
-        updateCoordState(latitude, longitude)
-        console.log("Coords: " + latitude.current.value + "°, " + longitude.current.value + "°")
-        console.log("Going to coordinates...")
-    };
-
-    const abortButtonClick = () => {
-        updateCoordState(latitude, longitude)
-        console.log("Autonomous mode aborting...")
-    };
-
     const postButtonClick = () => {
         updateCoordState(latitude, longitude)
         console.log("IDK what this does...")
@@ -40,6 +30,65 @@ function AutonomousControl() {
         updateCoordState(latitude, longitude)
         console.log("IDK what this does...")
     };
+
+    const updateFeed = () => {
+        autoFeed.val("Destination reached! \n" + autoFeed.val())
+    };
+
+    const navigateButtonClick = () => {
+        updateCoordState(latitude, longitude)
+        console.log("Coords: " + latitude.current.value + "°, " + longitude.current.value + "°")
+        console.log("Going to coordinates...")
+
+        var navCommand = new ROSLIB.Message({
+            target: "Post",
+            latitude: latitude.current.value,
+            longitude: longitude.current.value,
+            accuracy: 3.0
+        });
+        
+        var navGoalGps = new ROSLIB.Message({
+            latitude: navCommand.latitude,
+            longitude: navCommand.longitude,
+            altitude: 0
+        });
+        
+        navCommandPub.publish(navCommand);
+        navGpsPub.publish(navGoalGps);
+    }
+      
+    const abortButtonClick = () => {
+        updateCoordState(latitude, longitude)
+        console.log("Autonomous mode aborting...")
+
+        var navCommand = new ROSLIB.Message({
+            target: "Abort",
+            latitude: latitude.current.value,
+            longitude: longitude.current.value,
+            accuracy: 3.0
+        });
+    
+        navCommandPub.publish(navCommand);
+    }
+
+    var navCommandPub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/navigation_command',
+        messageType: 'navigation_controller/NavigationCommand'
+    });
+    
+    var navGpsPub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/nav_goal_gps',
+        messageType: 'sensor_msgs/NavSatFix'
+    });
+
+    var navStatusSub = new ROSLIB.Topic({
+        ros: ros,
+        name: '/navigation_status',
+        messageType: 'std_msgs/String'
+    });
+    navStatusSub.subscribe(updateFeed)
 
     return (
         <Container className = "p-4">
@@ -95,6 +144,7 @@ function AutonomousControl() {
                         </ButtonGroup>
                         <InputGroup.Text 
                             className = "feed"
+                            id = "autoFeed"
                         >
                         </InputGroup.Text>
                     </div>

@@ -3,8 +3,6 @@ import { useState } from 'react'
 import './Status.css';
 import ros from '../../utilities/ROS/ROS'
 
-var lidar_sub;
-
 function rosFeed() {
     const updateFeed = (message) => {
         var time = new Date().toTimeString().split(' ')[0];
