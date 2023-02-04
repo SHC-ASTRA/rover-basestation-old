@@ -132,6 +132,76 @@ function rosFeed() {
 function servosActuator() {
     const [servos, setCupServos] = useState([useRef(), useRef(), useRef(), useRef(), useRef()])
     const [actuatorVal, setActuator] = useState(useRef())
+
+    const sendCommand = (cmd) => {
+        var request = new ROSLIB.ServiceRequest({
+          command: cmd
+        });
+        cmdClient.callService(request);
+    }
+
+    const cupServoOneButtonClick = () => {
+        var cupServo1 = document.getElementById("cupServo1")
+        var pos = cupServo1.value
+
+        console.log("Setting cup servo 1 to " + pos + "...")
+
+        sendCommand("s1 " + pos);
+    };
+
+    const cupServoTwoButtonClick = () => {
+        var cupServo2 = document.getElementById("cupServo2")
+        var pos = cupServo2.value
+
+        console.log("Setting cup servo 2 to " + pos + "...")
+
+        sendCommand("s2 " + pos);
+    };
+
+    const cupServoThreeButtonClick = () => {
+        var cupServo3 = document.getElementById("cupServo3")
+        var pos = cupServo3.value
+
+        console.log("Setting cup servo 3 to " + pos + "...")
+
+        sendCommand("s3 " + pos);
+    };
+
+    const capServoButtonClick = () => {
+        var capServo = document.getElementById("capServo")
+        var pos = capServo.value
+
+        console.log("Setting capping servo to " + pos + "...")
+
+        sendCommand("s4 " + pos);
+    };
+
+    const micServoButtonClick = () => {
+        var micServo = document.getElementById("micServo")
+        var pos = micServo.value
+
+        console.log("Setting microscope servo to " + pos + "...")
+
+        sendCommand("s5 " + pos);
+    };
+
+    const actExtendButtonClick = () => {
+        var actuator = document.getElementById("actuator")
+        var runtime = actuator.value
+
+        console.log("Extending for " + runtime + " seconds...")
+        
+        sendCommand("at " + runtime)
+    }
+
+    const actRetractButtonClick = () => {
+        var actuator = document.getElementById("actuator")
+        var runtime = actuator.value
+
+        console.log("Retracting for " + runtime + " seconds...")
+        
+        sendCommand("at -" + runtime)
+    }
     
     var cmdClient = new ROSLIB.Service({
         ros: ros,
@@ -146,6 +216,96 @@ function servosActuator() {
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
+                    <InputGroup>
+                        <InputGroup.Text style = {{width: "152px"}}>Cup Servo 1</InputGroup.Text>
+                        <Form.Control 
+                            id = "cupServo1"
+                            defaultValue = "0.0"
+                            type = "number"
+                        />
+                        <Button 
+                            className = "btn-success"
+                            onClick = {cupServoOneButtonClick}
+                        >
+                            Go
+                        </Button>
+                    </InputGroup>
+                    <InputGroup>
+                        <InputGroup.Text style = {{width: "152px"}}>Cup Servo 2</InputGroup.Text>
+                        <Form.Control 
+                            id = "cupServo2"
+                            defaultValue = "0.0"
+                            type = "number"
+                        />
+                        <Button 
+                            className = "btn-success"
+                            onClick = {cupServoTwoButtonClick}
+                        >
+                            Go
+                        </Button>
+                    </InputGroup>
+                    <InputGroup>
+                        <InputGroup.Text style = {{width: "152px"}}>Cup Servo 3</InputGroup.Text>
+                        <Form.Control 
+                            id = "cupServo3"
+                            defaultValue = "0.0"
+                            type = "number"
+                        />
+                        <Button 
+                            className = "btn-success"
+                            onClick = {cupServoThreeButtonClick}
+                        >
+                            Go
+                        </Button>
+                    </InputGroup>
+                    <InputGroup>
+                        <InputGroup.Text style = {{width: "152px"}}>Capping Servo</InputGroup.Text>
+                        <Form.Control 
+                            id = "capServo"
+                            defaultValue = "0.0"
+                            type = "number"
+                        />
+                        <Button 
+                            className = "btn-success"
+                            onClick = {capServoButtonClick}
+                        >
+                            Go
+                        </Button>
+                    </InputGroup>
+                    <InputGroup>
+                        <InputGroup.Text style = {{width: "152px"}}>Microscope Servo</InputGroup.Text>
+                        <Form.Control 
+                            id = "micServo"
+                            defaultValue = "0.0"
+                            type = "number"
+                        />
+                        <Button 
+                            className = "btn-success"
+                            onClick = {micServoButtonClick}
+                        >
+                            Go
+                        </Button>
+                    </InputGroup>
+                    <InputGroup>
+                        <InputGroup.Text style = {{width: "152px"}}>Actuator</InputGroup.Text>
+                        <Form.Control 
+                            id = "actuator"
+                            defaultValue = "0.0"
+                            type = "number"
+                        />
+                        <Button 
+                            className = "btn-success"
+                            onClick = {actExtendButtonClick}
+                        >
+                            Extend
+                        </Button>
+                        <Button 
+                            className = "btn-danger"
+                            onClick = {actRetractButtonClick}
+                        >
+                            Retract
+                        </Button>
+                    </InputGroup>
                     {inputGo("Cup Servo 1", servos[0], "152px")}
                     {inputGo("Cup Servo 2", servos[1], "152px")}
                     {inputGo("Cup Servo 3", servos[2], "152px")}
@@ -159,8 +319,6 @@ function servosActuator() {
 }
 
 function fansPumps() {
-    const [pumps, setPumps] = useState([useRef(), useRef()])
-
     const sendCommand = (cmd) => {
         var request = new ROSLIB.ServiceRequest({
           command: cmd
