@@ -1,8 +1,12 @@
 import { Container, InputGroup, Form, Button, Card, Dropdown} from 'react-bootstrap';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ZoomIn } from 'react-bootstrap-icons';
-import { MapContainer,TileLayer,useMap,Marker,Popup } from 'react-leaflet';
+import { MapContainer,TileLayer,useMap,Marker,Popup, ScaleControl } from 'react-leaflet';
 import L from "leaflet";
+import './Rover-Control.css';
+//We gonna need a couple things 
+
+
 function controlMetric(name, unit, value) {
     return(
         <InputGroup>
@@ -56,13 +60,14 @@ function controlPanel() {
 }
 
 function createRoverIcon(_iconSize){
+    //Creates the icon since png isn't compatible with leaflet
     return L.icon({
         iconUrl: "./RoverTop.png",
         iconSize: [_iconSize],
     })
 }
 
-function map() {
+function map() {    
     return(
         <Card style = {{width: "50%"}}>
             <Card.Header className = "h5">
@@ -70,10 +75,10 @@ function map() {
             </Card.Header>
             <Card.Body>
             <MapContainer center={[38.4063,-110.7918]} zoom={13} scrollWheelZoom={false} style={{height:300,width:500}}>
+                <ScaleControl position='bottomright' />
                 <TileLayer  url="./usgs/{z}/{x}/{y}.jpg"/>
                 <Marker position={[38.4063,-110.7918]} icon={createRoverIcon(21)}/> 
             </MapContainer>  
-
             </Card.Body>
         </Card>
     );
@@ -91,6 +96,8 @@ function orientationSlider(name) {
 }
 
 function orientation() {
+    const [roll, setRoll] = useState(0);
+    const [pitch, setPitch] = useState(0);
     
     return(
         <Card style = {{width: "25%"}}>
@@ -99,13 +106,13 @@ function orientation() {
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
-                    
-                    <img src = {"./RoverBack.png"} style = {{width: "100px", height:"50px",transform:['rotate(${45deg})']}} />
-                    
+                    <div className='circle'>
+                    <img src = {"./RoverBack.png"} style = {{width: "100px", height:"50px",transform:`rotate(${roll}deg)`}} />{/*The rotate only works with loercase tilde :|*/}
+                    </div>
                     {orientationSlider("Roll")}
-                    
-                    <img src = {"./roverSide.png"} style={{width: "100px", height:"100px"}}/>
-                    
+                    <div className='circle'>
+                    <img src = {"./roverSide.png"} style={{width: "100px", height:"100px",transform:`rotate(${pitch}deg)`}}/>
+                    </div>
                     {orientationSlider("Pitch")}
                 </div>
             </Card.Body>
