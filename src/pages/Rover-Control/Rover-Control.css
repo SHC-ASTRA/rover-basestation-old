@@ -6,4 +6,6 @@
     border-color: black;
     border-style: solid;
     align-items: center;
-}
+    align-content: center;
+    justify-content: center;
+}   

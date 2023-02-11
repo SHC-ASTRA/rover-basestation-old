@@ -4,6 +4,7 @@ import { ZoomIn } from 'react-bootstrap-icons';
 import { MapContainer,TileLayer,useMap,Marker,Popup, ScaleControl } from 'react-leaflet';
 import L from "leaflet";
 import './Rover-Control.css';
+import ros from '../../utilities/ROS/ROS';
 //We gonna need a couple things 
 
 
@@ -105,7 +106,7 @@ function orientation() {
                 Orientation
             </Card.Header>
             <Card.Body>
-                <div className = "d-grid">
+                <div className = "d-grid" >
                     <div className='circle'>
                     <img src = {"./RoverBack.png"} style = {{width: "100px", height:"50px",transform:`rotate(${roll}deg)`}} />{/*The rotate only works with loercase tilde :|*/}
                     </div>
