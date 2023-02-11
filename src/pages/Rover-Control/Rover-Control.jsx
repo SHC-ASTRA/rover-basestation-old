@@ -75,9 +75,9 @@ function map() {
                 Map
             </Card.Header>
             <Card.Body>
-            <MapContainer center={[38.4063,-110.7918]} zoom={13} scrollWheelZoom={false} style={{height:300,width:500}}>
+            <MapContainer center={[38.4063,-110.7918]} zoom={14} scrollWheelZoom={false} style={{height:300,width:500}}>
                 <ScaleControl position='bottomright' />
-                <TileLayer  url="./usgs/{z}/{x}/{y}.jpg"/>
+                <TileLayer  url="./Map2/{z}/{x}/{y}.png"/>
                 <Marker position={[38.4063,-110.7918]} icon={createRoverIcon(21)}/> 
             </MapContainer>  
             </Card.Body>
