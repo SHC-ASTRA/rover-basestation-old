@@ -1,10 +1,8 @@
 import { Container, InputGroup, Form, Button, Card, Dropdown} from 'react-bootstrap';
-import { useEffect, useState } from 'react';
-import { ZoomIn } from 'react-bootstrap-icons';
-import { MapContainer,TileLayer,useMap,Marker,Popup, ScaleControl } from 'react-leaflet';
-import L from "leaflet";
+import React, { useEffect, useState } from 'react';
 import './Rover-Control.css';
 import ros from '../../utilities/ROS/ROS';
+import RoverMap from './roverMap';
 //We gonna need a couple things 
 
 
@@ -60,30 +58,20 @@ function controlPanel() {
     );
 }
 
-function createRoverIcon(_iconSize){
-    //Creates the icon since png isn't compatible with leaflet
-    return L.icon({
-        iconUrl: "./RoverTop.png",
-        iconSize: [_iconSize],
-    })
-}
 
-function map() {    
-    return(
+function map() {
+    return(   
         <Card style = {{width: "50%"}}>
             <Card.Header className = "h5">
                 Map
             </Card.Header>
             <Card.Body>
-            <MapContainer center={[38.4063,-110.7918]} zoom={14} scrollWheelZoom={false} style={{height:300,width:500}}>
-                <ScaleControl position='bottomright' />
-                <TileLayer  url="./Map2/{z}/{x}/{y}.png"/>
-                <Marker position={[38.4063,-110.7918]} icon={createRoverIcon(21)}/> 
-            </MapContainer>  
+                <RoverMap />
             </Card.Body>
         </Card>
     );
 }
+
 
 function orientationSlider(name) {
     return(
@@ -99,7 +87,6 @@ function orientationSlider(name) {
 function orientation() {
     const [roll, setRoll] = useState(0);
     const [pitch, setPitch] = useState(0);
-    
     return(
         <Card style = {{width: "25%"}}>
             <Card.Header className = "h5">

@@ -91,7 +91,7 @@ function inputGo(name, goRef, textWidth) {
 }
 
 function servosActuator() {
-    const [servos, setCupServos] = useState([useRef(), useRef(), useRef(), useRef(), useRef()])
+    const [servos, setCupServos] = useState([useRef(), useRef(), useRef(), useRef(), useRef(),useRef(), useRef(), useRef(),useRef()])
     const [actuatorVal, setActuator] = useState(useRef())
 
     return(
@@ -104,8 +104,12 @@ function servosActuator() {
                     {inputGo("Cup Servo 1", servos[0], "152px")}
                     {inputGo("Cup Servo 2", servos[1], "152px")}
                     {inputGo("Cup Servo 3", servos[2], "152px")}
+                    {inputGo("Cup Servo 4", servos[5], "152px")}
+                    {inputGo("Cup Servo 5", servos[6], "152px")}
+                    {inputGo("Cup Servo 6", servos[7], "152px")}
                     {inputGo("Capping Servo", servos[3], "152px")}
                     {inputGo("Microscope Servo", servos[4], "152px")}
+                    {inputGo("Dip Station Servo", servos[8], "152px")}
                     {inputDouble("Actuator", "Extend", "Retract", actuatorVal, "152px")}
                 </div>
             </Card.Body>
@@ -114,8 +118,8 @@ function servosActuator() {
 }
 
 function fansPumps() {
-    const [fans, setTargets] = useState([useRef(), useRef(), useRef()])
-    const [pumps, setPumps] = useState([useRef(), useRef()])
+    const [fans, setTargets] = useState([useRef(), useRef(), useRef(),useRef(), useRef(), useRef()])
+    const [pumps, setPumps] = useState([useRef(), useRef(), useRef( )])
 
     const purgeButtonClick = () => {
         console.log("Purging pumps...")
@@ -131,8 +135,13 @@ function fansPumps() {
                     {inputRun("Fan 1", fans[0], "80px")}
                     {inputRun("Fan 2", fans[1], "80px")}
                     {inputRun("Fan 3", fans[2], "80px")}
+                    {inputRun("Fan 4", fans[3], "80px")}
+                    {inputRun("Fan 5", fans[4], "80px")}
+                    {inputRun("Fan 6", fans[5], "80px")}
                     {inputDouble("Pump 1", "Dispense", "Suction", pumps[0], "80px")}
                     {inputDouble("Pump 2", "Dispense", "Suction", pumps[1], "80px")}
+                    {inputDouble("Pump 3", "Dispense", "Suction", pumps[2], "80px")}
+
                     <ButtonGroup>
                         <Button 
                             onClick = {purgeButtonClick}
