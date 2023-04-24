@@ -2,6 +2,8 @@ import { Container, InputGroup, Form, CardGroup, Card} from 'react-bootstrap';
 import { useState } from 'react'
 import './Status.css';
 import ros from '../../utilities/ROS/ROS'
+import ROSLIB from 'roslib';
+import { useEffect } from 'react';
 
 var lidar_sub;
 
@@ -122,7 +124,6 @@ function usage() {
 
 function metric(name, nameColor, nameWidth, unit, inMetric) {
     const [metric, setMetric] = useState(inMetric);
-
     return(
         <div>
             <InputGroup>
@@ -136,17 +137,19 @@ function metric(name, nameColor, nameWidth, unit, inMetric) {
 }
 
 function gps() {
-    const [metrics, setMetrics] = useState([0,0,0,0,0])
-    const updateGPS = (message) => {
-        setMetrics([message.latitude, message.longitude, message.altitude, message.horizontal_accuracy, message.timestamp])
-    }; 
-
-    var gpsSub = new ROSLIB.Topic({
-        ros: ros,
+    const [gps,setGps] = useState([0.0,0.0,0.0,0.0,0.0]);
+    var gpsListener = new ROSLIB.Topic({
+        ros:ros,
         name: '/teensy/gps',
-        messageType: 'embedded_controller_relay/NavSatReport',
+        messageType: 'embedded_controller_relay/NavSatReport'
     });
-    gpsSub.subscribe(updateGPS)
+    useEffect(()=>{
+        gpsListener.subscribe((msg)=>{
+            setGps(msg);
+            return()=>gpsListener.unsubscribe();
+        })
+    },[]);
+    
 
     return(
         <Card style = {{width: "25%"}}>
@@ -155,11 +158,11 @@ function gps() {
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
-                    {metric("Latitude", "rgb(214, 58, 214)", "101px", "°", metrics[0])}
-                    {metric("Longitude", "rgb(214, 58, 214)", "101px", "°", metrics[1])}
-                    {metric("Altitude", "rgb(214, 150, 58)", "101px", "m", metrics[2])}
-                    {metric("Accuracy", "rgb(214, 150, 58)", "101px", "m", metrics[3])}
-                    {metric("Time", "rgb(58, 150, 214)", "101px", "s", metrics[4])}
+                    {metric("Latitude", "rgb(214, 58, 214)", "101px", "°", gps[0])}
+                    {metric("Longitude", "rgb(214, 58, 214)", "101px", "°", gps[1])}
+                    {metric("Altitude", "rgb(214, 150, 58)", "101px", "m", gps[2])}
+                    {metric("Accuracy", "rgb(214, 150, 58)", "101px", "m", gps[3])}
+                    {metric("Time", "rgb(58, 150, 214)", "101px", "s", gps[4])}
                 </div>
             </Card.Body>
         </Card>
