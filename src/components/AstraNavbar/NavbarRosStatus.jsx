@@ -1,3 +1,4 @@
+import React from 'react';
 import { useContext, useState } from 'react';
 import { RosContext } from '../../utilities/ROS/RosContext';
 import { RecordCircleFill } from 'react-bootstrap-icons';

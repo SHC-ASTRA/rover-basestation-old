@@ -57,7 +57,7 @@ class RoverMap extends React.Component{
             <ButtonGroup>  
             <Button style={{height:'9%',width:'100%'}} onClick={()=>this.setState({markers: [null]})}>Reset Rover Path</Button> 
             {/*<Button style={{height:'9%',width:'100%'}} onClick={this.testCallback  }>Force Add</Button> */}
-            <Button style={{height:'9%',width:'100%', borderLeftColor: 'black'}} onClick={()=>this.setState({clickSpot: null})}>Cancel Auto</Button> 
+            <Button style={{height:'9%',width:'100%', borderLeftColor: 'black'}} onClick={()=>this.setState({clickSpot: null})}>Cancel Select</Button> 
             
             </ButtonGroup>
             </>

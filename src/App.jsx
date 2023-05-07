@@ -1,4 +1,5 @@
 import './App.css';
+import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AstraNavbar from './components/AstraNavbar/AstraNavbar';
 import Status from './pages/Status/Status';
