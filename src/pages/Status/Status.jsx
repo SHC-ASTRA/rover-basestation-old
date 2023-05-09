@@ -3,7 +3,7 @@ import { useState } from 'react'
 import './Status.css';
 import ros from '../../utilities/ROS/ROS'
 import React from 'react';
-var lidar_sub;
+
 
 function rosFeed() {
     const updateFeed = (message) => {
