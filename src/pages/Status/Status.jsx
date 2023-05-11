@@ -1,8 +1,9 @@
 import { Container, InputGroup, Form, CardGroup, Card} from 'react-bootstrap';
 import { useState } from 'react'
 import './Status.css';
-import ros from '../../utilities/ROS/ROS'
+import { RosContext } from '../../utilities/ROS/RosContext';
 import React from 'react';
+import { rosNode } from '../../utilities/ROS/ROS';
 
 
 function rosFeed() {
@@ -197,6 +198,7 @@ function battery() {
 function Status() {
     return (
         <Container className = "p-4">
+            <RosContextProvider>
             <div className = "card-deck">
                 {gps()}
                 {usage()}
@@ -206,6 +208,7 @@ function Status() {
             <div className = "card-deck">
                 {rosFeed()}
             </div>
+            </RosContextProvider>
         </Container>
     );
 }
