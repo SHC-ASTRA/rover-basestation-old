@@ -13,7 +13,7 @@ function RoverMap() {
   if(rosState === 'Connected'){
     rosNode.gps_sub.subscribe((newCord)=>{
       if(markers!=null){
-        setMarkers([...markers, [newCord.latitude, newCord.longitude]]);
+        setMarkers(prevMarkers=>[...prevMarkers.slice(-1), [newCord.latitude, newCord.longitude]]);//TEST THIS
       }
       else {
         setMarkers([[newCord.latitude, newCord.longitude]]);

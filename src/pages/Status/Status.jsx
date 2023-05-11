@@ -6,6 +6,8 @@ import React from 'react';
 import { rosNode } from '../../utilities/ROS/ROS';
 import ros from '../../utilities/ROS/ROS';
 import RosContextProvider from '../../utilities/ROS/RosContext';
+import { useContext } from 'react';
+import { useEffect } from 'react';
 
 function rosFeed() {
     const updateFeed = (message) => {
@@ -13,13 +15,7 @@ function rosFeed() {
         ROSFeed.val('[' + time + '] ' + log + ROSFeed.val());
     };
 
-    var rosoutSub = new ROSLIB.Topic({
-        ros: ros,
-        name: '/rosout',
-        messageType: 'rosgraph_msgs/Log'
-    });
-    rosoutSub.subscribe(updateFeed)
-
+    rosNode.rosout_sub.subscribe(updateFeed);
     return(
         <Card style = {{width: "100%"}}>
             <Card.Header className = "h5">
@@ -50,6 +46,21 @@ function diagnosticIndicator(name, inStatus) {
 
 function diagnostics() {
     const [status, setStatus] = useState([false, false, false, false, false, false, false, false])
+    const {rosState} = useContext(RosContext);
+    useEffect(()=>{
+        if(rosState=='Connected'){
+            setStatus(prevStatus=>[true,...prevStatus.slice(1)]);
+        }
+        else{
+            setStatus(prevStatus=>[false,...prevStatus.slice(1)]);
+        }
+        if(rosNode.ab_status_sub.enabled){
+            setStatus(prevStatus=>[prevStatus[0],true,...prevStatus.slice(2)]);
+        }
+        else{
+            setStatus(prevStatus=>[prevStatus[0],false,...prevStatus.slice(2)]);
+        }
+    },[]);
 
     return(
         <Card style = {{width: "25%"}}>
@@ -58,7 +69,7 @@ function diagnostics() {
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
-                    {diagnosticIndicator("Communications", status[0])}
+                    {diagnosticIndicator("Communications", status[0])/* Needs testing*/}
                     {diagnosticIndicator("Arm Base", status[1])}
                     {diagnosticIndicator("Biosensor", status[2])}
                     {diagnosticIndicator("Drone", status[3])}
@@ -99,12 +110,9 @@ function usage() {
         setUsages([message.cpu_usage.toFixed(2), message.gpu_usage.toFixed(2), message.mem_usage.toFixed(2)])
     };
 
-    var performanceSub = new ROSLIB.Topic({
-        ros: ros,
-        name: '/jetson/performance_report',
-        messageType: 'jetson_performance_reporter/PerformanceReport',
-    });
-    performanceSub.subscribe(updateUsage)
+  
+    rosNode.performance_sub.subscribe(updateUsage);
+    
 
     return(
         <Card style = {{width: "25%"}}>
@@ -143,12 +151,8 @@ function gps() {
         setMetrics([message.latitude, message.longitude, message.altitude, message.horizontal_accuracy, message.timestamp])
     }; 
 
-    var gpsSub = new ROSLIB.Topic({
-        ros: ros,
-        name: '/teensy/gps',
-        messageType: 'embedded_controller_relay/NavSatReport',
-    });
-    gpsSub.subscribe(updateGPS)
+
+    rosNode.gps_sub.subscribe(updateGPS);
 
     return(
         <Card style = {{width: "25%"}}>
@@ -174,13 +178,8 @@ function battery() {
         setMetrics([message.batteryVoltage.toFixed(1), (message.batteryCharge * 100).toFixed(2)])
     };
 
-    var batterySub = new ROSLIB.Topic({
-        ros: ros,
-        name: '/teensy/battery_status',
-        messageType: 'embedded_controller_relay/BatteryReport',
-    });
-    batterySub.subscribe(updateBattery)
-
+    
+    rosNode.battery_sub.subscribe(updateBattery);
     return(
         <Card style = {{width: "25%"}}>
             <Card.Header className = "h5">

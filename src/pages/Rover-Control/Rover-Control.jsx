@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import './Rover-Control.css';
 import ros from '../../utilities/ROS/ROS';
 import RoverMap from './roverMap';
-
+import RosContextProvider from '../../utilities/ROS/RosContext';
+import { rosNode } from '../../utilities/ROS/ROS';
 //We gonna need a couple things 
 
 
@@ -88,6 +89,15 @@ function orientationSlider(name) {
 function orientation() {
     const [roll, setRoll] = useState(0);
     const [pitch, setPitch] = useState(0);
+    rosNode.imu_sub.subscribe((data)=>{
+        or = data["linear_acceleration"];
+        accX = or["x"];
+        accY = or["y"];
+        accZ = or["z"];
+
+        setPitch(180 * Math.atan (accX/Math.sqrt(accY*accY + accZ*accZ))/Math.PI);
+        setRoll (180 * Math.atan2(accY, accZ)/Math.PI);
+    });
     return(
         <Card style = {{width: "25%"}}>
             <Card.Header className = "h5">
@@ -112,11 +122,13 @@ function orientation() {
 function RoverControl() {
     return (
         <Container className = "p-4">
+            <RosContextProvider>
             <div className = "card-deck">
                 {orientation()}
                 {map()}
                 {controlPanel()}
             </div>
+            </RosContextProvider>
         </Container>
     );
 }

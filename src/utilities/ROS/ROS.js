@@ -126,6 +126,12 @@ export const rosNode = { //OBject to hold all of the lisnteners when its time to
         name: "/sensor/zed2/zed_node/imu/data_drop",
         messageType: "sensor_msgs/Imu"
     }),
+   
+    ab_status_sub : new ROSLIB.Topic({
+        ros: ros,
+        name: '/arm/ab_status',
+        messageType: 'arm_relay/ABStatus',
+    }),
 
     };
     
