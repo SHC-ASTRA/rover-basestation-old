@@ -4,7 +4,8 @@ import './Status.css';
 import { RosContext } from '../../utilities/ROS/RosContext';
 import React from 'react';
 import { rosNode } from '../../utilities/ROS/ROS';
-
+import ros from '../../utilities/ROS/ROS';
+import RosContextProvider from '../../utilities/ROS/RosContext';
 
 function rosFeed() {
     const updateFeed = (message) => {
