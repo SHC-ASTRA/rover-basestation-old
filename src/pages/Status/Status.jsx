@@ -31,11 +31,11 @@ function rosFeed() {
 
 function diagnosticIndicator(name, inStatus) {
     const [status, setStatus] = useState(inStatus);
-
+    console.log(name,status);
     return(
         <div>
             <InputGroup>
-                <InputGroup.Text className = "indicator" style = {{backgroundColor: status ? "rgb(54, 146, 54)" : "rgb(198, 54, 54)"}}></InputGroup.Text>
+                <InputGroup.Text className = "indicator" style = {{backgroundColor: status ?   "rgb(54, 146, 54)": "rgb(198, 54, 54)"}}></InputGroup.Text>
                 <Form.Control
                     value={name}
                 readOnly/>
@@ -45,23 +45,33 @@ function diagnosticIndicator(name, inStatus) {
 }
 
 function diagnostics() {
-    const [status, setStatus] = useState([false, false, false, false, false, false, false, false])
+    const [status, setStatus] = useState([false, false, false, false, false, false, false])
     const {rosState} = useContext(RosContext);
     useEffect(()=>{
-        if(rosState=='Connected'){
-            setStatus(prevStatus=>[true,...prevStatus.slice(1)]);
+        let updatedStatus = [...status];
+        if(rosState=='Disconnected'){
+            updatedStatus[0] = true
+            
         }
         else{
-            setStatus(prevStatus=>[false,...prevStatus.slice(1)]);
+            updatedStatus[0] = false;
+            
         }
         if(rosNode.ab_status_sub.enabled){
-            setStatus(prevStatus=>[prevStatus[0],true,...prevStatus.slice(2)]);
+            updatedStatus[1] = true;
         }
         else{
-            setStatus(prevStatus=>[prevStatus[0],false,...prevStatus.slice(2)]);
+            updatedStatus[1] = false;
         }
-    },[]);
-
+        if(rosNode.bio_sub){
+            updatedStatus[2] = true;
+        }
+        else{
+            updatedStatus[2] = false;
+        }
+        setStatus(updatedStatus);
+    },[rosState]);
+    console.log(status[0],"here");
     return(
         <Card style = {{width: "25%"}}>
             <Card.Header className = "h5">
@@ -69,14 +79,15 @@ function diagnostics() {
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
+                    
                     {diagnosticIndicator("Communications", status[0])/* Needs testing*/}
                     {diagnosticIndicator("Arm Base", status[1])}
                     {diagnosticIndicator("Biosensor", status[2])}
-                    {diagnosticIndicator("Drone", status[3])}
-                    {diagnosticIndicator("LiDar", status[4])}
-                    {diagnosticIndicator("IMU", status[5])}
-                    {diagnosticIndicator("Teensy", status[6])}
-                    {diagnosticIndicator("Controller", status[7])}
+                    {/*diagnosticIndicator("Drone", status[3]) Maybe some day :'(*/}
+                    {diagnosticIndicator("LiDar", status[3])}
+                    {diagnosticIndicator("IMU", status[4])}
+                    {diagnosticIndicator("Teensy", status[5])}
+                    {diagnosticIndicator("Controller", status[6])}
                 </div>
             </Card.Body>
         </Card>
