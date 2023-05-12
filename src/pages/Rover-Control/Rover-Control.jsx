@@ -20,9 +20,23 @@ function controlMetric(name, unit, value) {
     );
 }
 
+function CreateOption(num){
+    return(
+        <option value={num}>Controller {num+1}</option>
+    );
+}
+
 function controlPanel() {
     const [metrics, setMetrics] = useState([0.0, 0.0, 0.0])
-
+    const [controllers, setControllers ]= useState({
+        controller: null,
+        enabled: false
+    });
+    useEffect(()=>{
+        navigator.getGamepads().map((val,idx)=>{
+            //Change this to be array of controller objects
+        })
+    },[navigator.getGamepads()])
     const enableButtonClick = () => {
         var controller = document.getElementById("controllerSelected")
         var controllerText = controller.options[controller.selectedIndex].text
@@ -41,8 +55,13 @@ function controlPanel() {
                     <InputGroup>
                         <InputGroup.Text>Controller</InputGroup.Text>
                         <Form.Select id = "controllerSelected">
-                            <option value = "0">N/A</option>
-                            <option value = "1">Example 1</option>
+                        {controllers?.map((val,idx)=>{
+                            if(val!= null){
+                                return(
+                                <option value={idx}>Controller {idx+1}</option>
+                                );
+                            }
+                            })}
                         </Form.Select>
                         <Button 
                             onClick = {enableButtonClick}

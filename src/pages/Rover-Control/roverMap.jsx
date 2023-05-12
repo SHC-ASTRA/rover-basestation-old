@@ -28,7 +28,7 @@ function RoverMap() {
 
   return (
     <>
-      <MapContainer center={[38.4063,-110.7918]} zoom={13} scrollWheelZoom={false} style={{height:'95%',width:'100%'}} maxZoom={18} minZoom={13} onClick={locateClick}>
+      <MapContainer center={[38.4063,-110.7918]} zoom={13} scrollWheelZoom={false} style={{height:'95%',width:'100%'}} maxZoom={18} minZoom={12} onClick={locateClick}>
         <ScaleControl position='bottomright' />
         <TileLayer  url="./map2/{z}/{x}/{y}.png"/>
         {markers?.map((val,idx,positions)=>{
