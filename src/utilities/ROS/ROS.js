@@ -133,6 +133,12 @@ export const rosNode = { //OBject to hold all of the lisnteners when its time to
         messageType: 'arm_relay/ABStatus',
     }),
 
+
+    lidar_sub : new ROSLIB.Topic({
+        ros: ros,
+        name: '/scan',
+        messageType: 'std_msgs/String'
+    }),
     };
     
 

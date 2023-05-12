@@ -10,6 +10,7 @@ import { useContext } from 'react';
 import { useEffect } from 'react';
 
 function rosFeed() {
+    
     const updateFeed = (message) => {
         var log = new Date().toTimeString().split(' ')[0];
         ROSFeed.val('[' + time + '] ' + log + ROSFeed.val());
@@ -29,13 +30,13 @@ function rosFeed() {
     );
 }
 
-function diagnosticIndicator(name, inStatus) {
-    const [status, setStatus] = useState(inStatus);
-    console.log(name,status);
+function diagnosticIndicator(name, status) {
+    
+    
     return(
         <div>
             <InputGroup>
-                <InputGroup.Text className = "indicator" style = {{backgroundColor: status ?   "rgb(54, 146, 54)": "rgb(198, 54, 54)"}}></InputGroup.Text>
+                <InputGroup.Text className = "indicator" style = {{backgroundColor: status ? "rgb(54, 146, 54)":"rgb(198, 54, 54)" }}></InputGroup.Text>
                 <Form.Control
                     value={name}
                 readOnly/>
@@ -47,9 +48,37 @@ function diagnosticIndicator(name, inStatus) {
 function diagnostics() {
     const [status, setStatus] = useState([false, false, false, false, false, false, false])
     const {rosState} = useContext(RosContext);
+    let toUpdate = [...status];
+    
+    rosNode.ab_status_sub.subscribe((msg) =>{
+        toUpdate[1] = msg.enabled ? true : false;
+        setStatus(toUpdate);
+    });
+
+    rosNode.bio_sub.subscribe((data)=>{
+        toUpdate[2] = data ? true : false;
+        setStatus(toUpdate);
+    });
+
+    rosNode.lidar_sub.subscribe((msg)=>{
+        toUpdate[3] = msg ? true: false;
+        setStatus(toUpdate);
+    });
+
+    rosNode.imu_sub.subscribe((data)=>{
+        toUpdate[4] = data ? true: false;
+        setStatus(toUpdate);
+    });
+
+    rosNode.battery_sub.subscribe((data) =>{
+        toUpdate[5] = data ? true: false;
+    })
+    
+    //DO CONTROLLER ONCE FIND HOW DO
     useEffect(()=>{
         let updatedStatus = [...status];
-        if(rosState=='Disconnected'){
+        
+        if(rosState=='Connected'){
             updatedStatus[0] = true
             
         }
@@ -57,21 +86,10 @@ function diagnostics() {
             updatedStatus[0] = false;
             
         }
-        if(rosNode.ab_status_sub.enabled){
-            updatedStatus[1] = true;
-        }
-        else{
-            updatedStatus[1] = false;
-        }
-        if(rosNode.bio_sub){
-            updatedStatus[2] = true;
-        }
-        else{
-            updatedStatus[2] = false;
-        }
         setStatus(updatedStatus);
     },[rosState]);
-    console.log(status[0],"here");
+    
+    
     return(
         <Card style = {{width: "25%"}}>
             <Card.Header className = "h5">

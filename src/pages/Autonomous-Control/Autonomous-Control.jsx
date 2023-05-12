@@ -1,25 +1,40 @@
 import React from 'react';
 import { Container, Card, InputGroup, Form, ButtonGroup, Button, FormControl, FormGroup } from 'react-bootstrap';
-import { createRef, useEffect, useState } from 'react';
+import { createRef, useEffect, useState, useCallback } from 'react';
 import './Autonomous-Control.css';
+import { useSearchParams } from 'react-router-dom';
 
 function AutonomousControl() {
     const latitude = createRef();
     const longitude = createRef();
+    const [searchParams] = useSearchParams();
 
     const [coordState, setCoordState] = useState({
         latitude: 0,
         longitude: 0,
+        target: null,
+        altitude: 0,
+        accuracy: 3.0
     });
 
-    const updateCoordState = (lat, long) => {
+    const updateCoordState = (lat, long, target) => {
         if (lat.current) {
             setCoordState({
                 latitude: lat.current.value,
                 longitude: long.current.value,
+                target: target,
             });
         }
     };
+
+    useEffect(() => {
+        if(searchParams?.size == 2)
+        {
+            latitude.current.value = searchParams.get('lat');
+            longitude.current.value = searchParams.get('lng');
+            setCoordState({ latitude: searchParams.get('lat'), longitude: searchParams.get('lng')});
+        }
+    }, []);
 
     const navigateButtonClick = () => {
         updateCoordState(latitude, longitude)
@@ -28,17 +43,24 @@ function AutonomousControl() {
     };
 
     const abortButtonClick = () => {
-        updateCoordState(latitude, longitude)
+        updateCoordState(latitude, longitude, "ABORT")
         console.log("Autonomous mode aborting...")
     };
 
-    const postButtonClick = () => {
-        updateCoordState(latitude, longitude)
+    useEffect(() => {
+        if (coordState && coordState.latitude != 0 && 0 != coordState.longitude) {
+            console.log("Move it!");
+            console.log(coordState);
+        }
+    }, [coordState]);
+
+    const postButtonClick = useCallback(() => {
+        updateCoordState(latitude, longitude, "POST");
         console.log("IDK what this does...")
-    };
+    }, [coordState]);
 
     const gateButtonClick = () => {
-        updateCoordState(latitude, longitude)
+        updateCoordState(latitude, longitude, "GATE");
         console.log("IDK what this does...")
     };
 

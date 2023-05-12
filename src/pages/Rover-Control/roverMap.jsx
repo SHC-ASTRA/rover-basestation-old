@@ -4,12 +4,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
 import { RosContext } from '../../utilities/ROS/RosContext';
 import { rosNode } from '../../utilities/ROS/ROS';
+import { useNavigate } from 'react-router-dom';
 
 
 function RoverMap() {
   const {rosState} = useContext(RosContext);
   const [markers, setMarkers] = useState([null]);
   const [clickSpot, setClickSpot] = useState(null);
+  const nav = useNavigate();
   if(rosState === 'Connected'){
     rosNode.gps_sub.subscribe((newCord)=>{
       if(markers!=null){
@@ -29,7 +31,7 @@ function RoverMap() {
       <MapContainer center={[38.4063,-110.7918]} zoom={13} scrollWheelZoom={false} style={{height:'95%',width:'100%'}} maxZoom={18} minZoom={13} onClick={locateClick}>
         <ScaleControl position='bottomright' />
         <TileLayer  url="./map2/{z}/{x}/{y}.png"/>
-        {markers.map((val,idx,positions)=>{
+        {markers?.map((val,idx,positions)=>{
           if(val!= null){
             var makerIcon = (idx === positions.length-1) ? createRoverIcon(21) : prevIcon(21);
             return(
@@ -47,7 +49,7 @@ function RoverMap() {
               Do you want to navigate to these coordinates?<br />
               Latitude: {clickSpot.lat}<br />
               Longitude: {clickSpot.lng}<br />
-              <Button variant="primary" onClick={() => console.log('Navigating...')}>Yes</Button>{/*Fix this to send a ROS autonomous command */}
+              <Button variant="primary" onClick={() => { console.log(clickSpot); nav(`/Autonomous-Control?lat=${clickSpot.lat}&lng=${clickSpot.lng}`); }}>Yes</Button>{/*Fix this to send a ROS autonomous command */}
               <Button variant="secondary" onClick={() => setClickSpot(null)}>No</Button>
             </Popup>
           </Marker>
