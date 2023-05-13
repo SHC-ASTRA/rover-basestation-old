@@ -28,19 +28,21 @@ function CreateOption(num){
 
 function controlPanel() {
     const [metrics, setMetrics] = useState([0.0, 0.0, 0.0])
-    const [controllers, setControllers ]= useState({
-        controller: null,
-        enabled: false
-    });
+    const [controllers, setControllers ]= useState(navigator.getGamepads());
     useEffect(()=>{
-        navigator.getGamepads().map((val,idx)=>{
-            //Change this to be array of controller objects
-        })
-    },[navigator.getGamepads()])
+      window.addEventListener("gamepadconnected",(e)=>{
+        setControllers(navigator.getGamepads());
+        console.log("added controller");
+      });
+      window.addEventListener("gamepaddisconnected",(e)=>{
+        setControllers(navigator.getGamepads());
+        console.log("removed controller");
+      })
+    },[])
     const enableButtonClick = () => {
         var controller = document.getElementById("controllerSelected")
         var controllerText = controller.options[controller.selectedIndex].text
-
+        
         console.log("Enabling controller: " + controllerText)
     };
 
