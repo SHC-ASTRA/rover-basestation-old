@@ -139,6 +139,8 @@ export const rosNode = { //OBject to hold all of the lisnteners when its time to
         name: '/scan',
         messageType: 'std_msgs/String'
     }),
+
+    
     };
     
 

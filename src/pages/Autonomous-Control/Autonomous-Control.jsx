@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Container, Card, InputGroup, Form, ButtonGroup, Button, FormControl, FormGroup } from 'react-bootstrap';
 import { createRef, useEffect, useState, useCallback } from 'react';
 import './Autonomous-Control.css';
 import { useSearchParams } from 'react-router-dom';
+import ROSLIB from 'roslib';
+import { rosNode } from '../../utilities/ROS/ROS';
+import { RosContext } from '../../utilities/ROS/RosContext';
 
 function AutonomousControl() {
     const latitude = createRef();
     const longitude = createRef();
     const [searchParams] = useSearchParams();
-
+    const {rosState} = useContext(RosContext);
     const [coordState, setCoordState] = useState({
         latitude: 0,
         longitude: 0,
@@ -39,12 +42,37 @@ function AutonomousControl() {
     const navigateButtonClick = () => {
         updateCoordState(latitude, longitude)
         console.log("Coords: " + latitude.current.value + "°, " + longitude.current.value + "°")
-        console.log("Going to coordinates...")
+        console.log("Going to coordinates...");
+        if(rosState == "Connected"){
+            gps_goal = new ROSLIB.Message({
+                latitude: latitude.current.value,
+                longitude: longitude.current.value,
+                altitude: 0
+            });
+            nav_cmd = new ROSLIB.Message({
+                target: coordState.target,
+                latitude: coordState.latitude,
+                longitude: coordState.longitude,
+                accuracy: 3.0
+            });
+
+            rosNode.nav_command_pub.publish(nav_cmd);
+            rosNode.nav_gps_pub.publish(gps_goal);
+        }
+        
+
     };
 
     const abortButtonClick = () => {
-        updateCoordState(latitude, longitude, "ABORT")
-        console.log("Autonomous mode aborting...")
+        updateCoordState(latitude, longitude, "Abort");
+        console.log("Autonomous mode aborting...");
+        abort_cmd = new ROSLIB.Message({
+            target: "Abort",
+            latitude: latitude.current.value,
+            longitude: longitude.current.value,
+            accuracy: 3.0
+        });
+        rosNode.nav_command_pub.publish(abort_cmd);
     };
 
     useEffect(() => {
@@ -55,14 +83,16 @@ function AutonomousControl() {
     }, [coordState]);
 
     const postButtonClick = useCallback(() => {
-        updateCoordState(latitude, longitude, "POST");
-        console.log("IDK what this does...")
+        updateCoordState(latitude, longitude, "Post");
+      
+
+
     }, [coordState]);
 
-    const gateButtonClick = () => {
-        updateCoordState(latitude, longitude, "GATE");
-        console.log("IDK what this does...")
-    };
+    const gateButtonClick = useCallback(() => {
+        updateCoordState(latitude, longitude, "Gate");
+
+    },[coordState]);
 
     return (
         <Container className = "p-4">

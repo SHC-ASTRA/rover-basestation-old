@@ -5,6 +5,7 @@ import ros from '../../utilities/ROS/ROS';
 import RoverMap from './roverMap';
 import RosContextProvider from '../../utilities/ROS/RosContext';
 import { rosNode } from '../../utilities/ROS/ROS';
+import useController from '../../utilities/userController';
 //We gonna need a couple things 
 
 
@@ -29,6 +30,21 @@ function CreateOption(num){
 function controlPanel() {
     const [metrics, setMetrics] = useState([0.0, 0.0, 0.0])
     const [controllers, setControllers ]= useState(navigator.getGamepads());
+    const [enabled, setEnabled] = useState(false);
+    const [selIndex, setSelIndex] = useState(0);
+    const [leftInput, setLeftInput] = useState(0);
+    const [rightInput, setRightInput] = useState(0);
+
+    const publishControllerData = (left,right) =>{
+        console.log(left,right);
+        //Change this to include check for the dead area
+        rosNode.fr_motor_pub.publish(right);
+        rosNode.br_motor_pub.publish(right);
+        rosNode.fl_motor_pub.publish(left);
+        rosNode.bl_motor_pub.publish(left);
+    }
+    rosNode.battery_sub.subscribe((msg)=>{setMetrics([msg.batteryVoltage,metrics.slice(1)])});
+    rosNode.gps_sub.subscribe((msg)=>{setMetrics([metrics[0],msg.ground_speed,metrics.slice(2)])});
     useEffect(()=>{
       window.addEventListener("gamepadconnected",(e)=>{
         setControllers(navigator.getGamepads());
@@ -37,13 +53,24 @@ function controlPanel() {
       window.addEventListener("gamepaddisconnected",(e)=>{
         setControllers(navigator.getGamepads());
         console.log("removed controller");
-      })
-    },[])
+      });
+      if(enabled){
+        const interval = setInterval(()=>{
+            const controller = navigator.getGamepads()[selIndex];
+            setLeftInput(controller.axes[1]);//Change these to fit the actual controller
+            setRightInput(controller.axes[3]);//Instead of setting we can just publish these values
+            publishControllerData(controller.axes[1],controller.axes[3]);
+            
+        },50);
+      }
+    },[enabled,])
     const enableButtonClick = () => {
         var controller = document.getElementById("controllerSelected")
         var controllerText = controller.options[controller.selectedIndex].text
-        
-        console.log("Enabling controller: " + controllerText)
+        setEnabled(true);
+        setSelIndex(controller.selectedIndex);
+        console.log(controller.selectedIndex);
+        console.log("Enabling controller: " + controllerText);
     };
 
     return(
@@ -71,10 +98,11 @@ function controlPanel() {
                         >
                             Enable
                         </Button>
+                        
                     </InputGroup>
                     {controlMetric("Voltage:", "V", metrics[0])}
-                    {controlMetric("Range:", "?", metrics[1])}
-                    {controlMetric("Speed:", "?", metrics[2])}
+                    {controlMetric("Range:", "?", metrics[2])}
+                    {controlMetric("Speed:", "?", metrics[1])}
                 </div>
             </Card.Body>
         </Card>
@@ -96,12 +124,13 @@ function map() {
 }
 
 
-function orientationSlider(name) {
+function orientationSlider(name,val) {
     return(
         <InputGroup>
             <InputGroup.Text style = {{width: "61px"}}>{name}</InputGroup.Text>
             <Form.Control
                 type = "number"
+                value={val}
             />
         </InputGroup>
     );
@@ -129,11 +158,11 @@ function orientation() {
                     <div className='circle'>
                     <img src = {"./RoverBack.png"} style = {{width: "100px", height:"50px",transform:`rotate(${roll}deg)`}} />{/*The rotate only works with loercase tilde :|*/}
                     </div>
-                    {orientationSlider("Roll")}
+                    {orientationSlider("Roll",roll)}
                     <div className='circle'>
                     <img src = {"./roverSide.png"} style={{width: "100px", height:"100px",transform:`rotate(${pitch}deg)`}}/>
                     </div>
-                    {orientationSlider("Pitch")}
+                    {orientationSlider("Pitch",pitch)}
                 </div>
             </Card.Body>
         </Card>
