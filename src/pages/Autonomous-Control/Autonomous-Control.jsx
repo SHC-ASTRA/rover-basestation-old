@@ -2,14 +2,21 @@ import React, { useContext } from 'react';
 import { Container, Card, InputGroup, Form, ButtonGroup, Button, FormControl, FormGroup } from 'react-bootstrap';
 import { createRef, useEffect, useState, useCallback } from 'react';
 import './Autonomous-Control.css';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams,useNavigate } from 'react-router-dom';
 import ROSLIB from 'roslib';
 import { rosNode } from '../../utilities/ROS/ROS';
 import { RosContext } from '../../utilities/ROS/RosContext';
 
 function AutonomousControl() {
+    const nav = useNavigate();
     const latitude = createRef();
     const longitude = createRef();
+    const minNorth = createRef();
+    const secNorth = createRef();
+    const minEast = createRef();
+    const secEast = createRef();
+    const degNorth = createRef();
+    const degEast  = createRef();
     const [searchParams] = useSearchParams();
     const {rosState} = useContext(RosContext);
     const [coordState, setCoordState] = useState({
@@ -94,6 +101,13 @@ function AutonomousControl() {
 
     },[coordState]);
 
+    const convertMins = useCallback(()=>{
+        
+        latitude.current.value = (degNorth.current.value/1)+(minNorth.current.value/60)+(secNorth.current.value/3600);
+        longitude.current.value=(degEast.current.value/1)+(minEast.current.value/60)+(secEast.current.value/3600);
+        
+    });
+
     return (
         <Container className = "p-4">
             <Card>
@@ -118,6 +132,41 @@ function AutonomousControl() {
                                 defaultValue = {coordState.longitude}
                             />
                             <InputGroup.Text>°</InputGroup.Text>
+                        </InputGroup>
+                        <InputGroup>
+                            <InputGroup.Text>Degrees North</InputGroup.Text>
+                            <Form.Control
+                                name="DegNorth"
+                                type="number"
+                                ref={degNorth} />
+                            <InputGroup.Text>Minutes North:</InputGroup.Text>
+                            <Form.Control
+                            name="minNorth"
+                            type="number"
+                            ref={minNorth} />
+                            <InputGroup.Text>Seconds North:</InputGroup.Text>
+                            <Form.Control
+                            name='secNorth'
+                            type='number'
+                            ref={secNorth} />
+                            <InputGroup.Text>Degrees East</InputGroup.Text>
+                            <Form.Control
+                            name='degEast'
+                            type='number'
+                            ref={degEast} />
+                            <InputGroup.Text>Minutes East:</InputGroup.Text>
+                            <Form.Control
+                            name='minEast'
+                            type='number'
+                            ref={minEast} />
+                            <InputGroup.Text>Seconds East:</InputGroup.Text>
+                            <Form.Control
+                            name='secEast'
+                            type='number'
+                            ref={secEast} />
+                            
+                                <Button onClick={convertMins}>Convert</Button>
+                            
                         </InputGroup>
                         <ButtonGroup>
                             <Button 

@@ -1,6 +1,9 @@
 import React from 'react';
 import { Container, Card, InputGroup, Form, Button, ButtonGroup, Dropdown } from 'react-bootstrap'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react';
+import { rosNode, send_cmd } from '../../utilities/ROS/ROS';
+import RosContextProvider from '../../utilities/ROS/RosContext';
+
 
 function inputDouble(name, first, second, doubleRef, textWidth) {
     const doubleRefAgain = useRef()
@@ -239,15 +242,39 @@ function carousel() {
         </Card>
     );
 }
+function rosFeed() {
+    
+    const updateFeed = (message) => {
+        var log = new Date().toTimeString().split(' ')[0];
+        ROSFeed.val('[' + time + '] ' + log + ROSFeed.val());
+    };
+
+    rosNode.bio_sub.subscribe(updateFeed);
+    return(
+        <Card style = {{width: "100%"}}>
+            
+            <Card.Body>
+                <InputGroup.Text id = "ROSFeed" className = "feed">
+                </InputGroup.Text>
+            </Card.Body>
+        </Card>
+    );
+}
+
 
 function BiosensorControl() {
     return (
         <Container className="p-4">
+            <RosContextProvider>
             <div className = "card-deck">
                 {carousel()}
                 {fansPumps()}
                 {servosActuator()}
             </div>
+            <div className='card-deck'>
+                {rosFeed()}
+            </div>
+            </RosContextProvider>
         </Container>
     );
 }

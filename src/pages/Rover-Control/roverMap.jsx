@@ -49,7 +49,7 @@ function RoverMap() {
               Do you want to navigate to these coordinates?<br />
               Latitude: {clickSpot.lat}<br />
               Longitude: {clickSpot.lng}<br />
-              <Button variant="primary" onClick={() => { console.log(clickSpot); nav(`/Autonomous-Control?lat=${clickSpot.lat}&lng=${clickSpot.lng}`); }}>Yes</Button>{/*Fix this to send a ROS autonomous command */}
+              <Button variant="primary" onClick={() => { console.log(clickSpot); nav(`/Autonomous-Control?lat=${clickSpot.lat}&lng=${clickSpot.lng}`); }}>Yes</Button>
               <Button variant="secondary" onClick={() => setClickSpot(null)}>No</Button>
             </Popup>
           </Marker>
