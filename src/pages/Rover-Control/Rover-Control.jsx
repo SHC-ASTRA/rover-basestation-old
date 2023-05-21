@@ -53,13 +53,14 @@ function controlPanel() {
       window.addEventListener("gamepaddisconnected",(e)=>{
         setControllers(navigator.getGamepads());
         console.log("removed controller");
+        setEnabled(false);
       });
       if(enabled){
         const interval = setInterval(()=>{
             const controller = navigator.getGamepads()[selIndex];
             setLeftInput(controller.axes[1]);//Change these to fit the actual controller
-            setRightInput(controller.axes[3]);//Instead of setting we can just publish these values
-            publishControllerData(controller.axes[1],controller.axes[3]);
+            setRightInput(controller.axes[0]);//Instead of setting we can just publish these values
+            publishControllerData(-1*controller.axes[1],-1* controller.axes[3]);
             
         },50);
       }
@@ -101,7 +102,7 @@ function controlPanel() {
                         
                     </InputGroup>
                     {controlMetric("Voltage:", "V", metrics[0])}
-                    {controlMetric("Range:", "?", metrics[2])}
+                    {/*controlMetric("Range:", "?", metrics[2])*/}
                     {controlMetric("Speed:", "?", metrics[1])}
                 </div>
             </Card.Body>

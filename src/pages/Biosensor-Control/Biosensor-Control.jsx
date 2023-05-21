@@ -168,16 +168,19 @@ function carousel() {
         var fromText = from.options[from.selectedIndex].text
         var to = document.getElementById("autoTo")
         var toText = to.options[to.selectedIndex].text
-
+        setPos((to.selectedIndex+1)-(from.selectedIndex+1));
+        send_cmd("cr " + pos);
         console.log("Targetting relatively from " + fromText + " to " + toText + "...")
     };
     
     const prevCuvButtonClick = () => {
-        console.log("Going to previous cuvette...")
+        console.log("Going to previous cuvette...");
+        send_cmd("cr -1");
     };
 
     const nextCuvButtonClick = () => {
-        console.log("Going to next cuvette...")
+        console.log("Going to next cuvette...");
+        send_cmd("cr 1");
     };
 
     return(
