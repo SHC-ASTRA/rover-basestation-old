@@ -147,7 +147,7 @@ export function send_cmd(cmd){
     
     var request = new ROSLIB.ServiceRequest({
         command: cmd
-    });
+    }); 
     rosNode.cmd_client.callService(request);
 }
 

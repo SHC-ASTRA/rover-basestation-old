@@ -248,8 +248,10 @@ function rosFeed() {
         var log = new Date().toTimeString().split(' ')[0];
         ROSFeed.val('[' + time + '] ' + log + ROSFeed.val());
     };
-
-    rosNode.bio_sub.subscribe(updateFeed);
+    useEffect(()=>{
+        rosNode.bio_sub.subscribe(updateFeed);
+    })
+    
     return(
         <Card style = {{width: "100%"}}>
             <Card.Header className='h5'>Rover Feed</Card.Header>
