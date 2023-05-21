@@ -144,6 +144,7 @@ export const rosNode = { //OBject to hold all of the lisnteners when its time to
     };
     
 export function send_cmd(cmd){
+    
     var request = new ROSLIB.ServiceRequest({
         command: cmd
     });

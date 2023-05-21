@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createRef, useCallback } from 'react';
 import { Container, Card, InputGroup, Form, Button, ButtonGroup, Dropdown } from 'react-bootstrap'
 import { useState, useEffect, useRef } from 'react';
 import { rosNode, send_cmd } from '../../utilities/ROS/ROS';
@@ -171,7 +171,7 @@ function carousel() {
 
         console.log("Targetting relatively from " + fromText + " to " + toText + "...")
     };
-
+    
     const prevCuvButtonClick = () => {
         console.log("Going to previous cuvette...")
     };
@@ -252,7 +252,7 @@ function rosFeed() {
     rosNode.bio_sub.subscribe(updateFeed);
     return(
         <Card style = {{width: "100%"}}>
-            
+            <Card.Header className='h5'>Rover Feed</Card.Header>
             <Card.Body>
                 <InputGroup.Text id = "ROSFeed" className = "feed">
                 </InputGroup.Text>
@@ -262,6 +262,30 @@ function rosFeed() {
 }
 
 
+function serialCmdHandler(){
+    const cmd = createRef();
+    
+    const send_btn_click = useCallback(()=>{
+        if(cmd.current){
+            console.log(cmd.current.value);
+            send_cmd(cmd.current.value);
+        }
+    });
+
+
+    return(
+        <Card style={{width:"100%"}}>
+            <Card.Header className='h5'>Command</Card.Header>
+            <Card.Body>
+                <Form.Control name="Command" type="text" ref ={cmd} />
+                <ButtonGroup>
+                    <Button onClick={send_btn_click}>Send</Button>
+                </ButtonGroup>
+            </Card.Body>
+        </Card>
+    );
+}
+
 function BiosensorControl() {
     return (
         <Container className="p-4">
@@ -270,8 +294,10 @@ function BiosensorControl() {
                 {carousel()}
                 {fansPumps()}
                 {servosActuator()}
+                
             </div>
             <div className='card-deck'>
+                {serialCmdHandler()}
                 {rosFeed()}
             </div>
             </RosContextProvider>
