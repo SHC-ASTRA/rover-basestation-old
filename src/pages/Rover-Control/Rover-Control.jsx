@@ -6,6 +6,7 @@ import RoverMap from './roverMap';
 import RosContextProvider from '../../utilities/ROS/RosContext';
 import { rosNode } from '../../utilities/ROS/ROS';
 import useController from '../../utilities/userController';
+import ROSLIB from 'roslib';
 //We gonna need a couple things 
 
 
@@ -85,7 +86,13 @@ function controlPanel() {
                 <div className = "d-grid">
                     <img src = "./RoverTop.png" style={{height:"200px", width:"200px"}}/>
                     <InputGroup>
-                    <Form.Range style={{width:'75%'}} onChange={(val)=>{setMotorPowerDisp(val.target.value)}}></Form.Range>
+                    <Form.Range style={{width:'75%'}} onChange={(val)=>{
+                        setMotorPowerDisp(val.target.value);
+                        var powerControlUpdate = new ROSLIB.Message({
+                            data:val.target.value/100.0
+                        });
+                        rosNode.motor_power_pub.publish(powerControlUpdate);
+                        }}></Form.Range>
                     <InputGroup.Text  style={{width:"20%", height:"80%"}} >{motorPowerDisp}</InputGroup.Text>
                     </InputGroup>
                     <InputGroup>
