@@ -1,10 +1,12 @@
 import { MapContainer,TileLayer,useMap,Marker,Popup, ScaleControl, useMapEvents } from 'react-leaflet';
 import L, { marker } from "leaflet";
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, ButtonGroup } from 'react-bootstrap';
+import { Button, ButtonGroup, InputGroup, FormControl,Form} from 'react-bootstrap';
 import { RosContext } from '../../utilities/ROS/RosContext';
 import { rosNode } from '../../utilities/ROS/ROS';
 import { useNavigate } from 'react-router-dom';
+import { createRef } from 'react';
+import { useCallback } from 'react';
 
 
 function RoverMap() {
@@ -12,6 +14,9 @@ function RoverMap() {
   const [markers, setMarkers] = useState([null]);
   const [clickSpot, setClickSpot] = useState(null);
   const nav = useNavigate();
+  const [waypoint,setWaypoint] =  useState([null]);
+  const wayLat = createRef();
+  const wayLng = createRef();
   if(rosState === 'Connected'){
     rosNode.gps_sub.subscribe((newCord)=>{
       if(markers!=null){
@@ -25,7 +30,16 @@ function RoverMap() {
   const locateClick = (e) => {
     setClickSpot(e.latlng);
   }
-
+  const updateWaypoints = useCallback(()=>{
+    console.log(wayLat.current.value)
+    let waypoints = [...waypoint];
+    
+    if(wayLat.current && wayLng.current){
+      waypoints.push([wayLat.current.value,wayLng.current.value]);
+    }
+    setWaypoint(waypoints);
+  });
+    
   return (
     <>
       <MapContainer center={[38.4063,-110.7918]} zoom={13} scrollWheelZoom={false} style={{height:'95%',width:'100%'}} maxZoom={18} minZoom={12} onClick={locateClick}>
@@ -54,13 +68,28 @@ function RoverMap() {
             </Popup>
           </Marker>
         )}
+        {waypoint?.map((val)=>{
+          if(val){
+            return(
+                <Marker position={val} />
+              );
+          }
+          
+        })}
         <MapClickHandler onMapClick={(e)=>setClickSpot(e.latlng)} />
       </MapContainer>
       <ButtonGroup>  
-        <Button style={{height:'9%',width:'100%'}} onClick={()=>setMarkers([null])}>Reset Rover Path</Button> 
+        <Button style={{height:'9%',width:'100%'}} onClick={()=>{setMarkers([null]);setWaypoint([null]);}}>Reset Rover Path</Button> 
         {/*<Button style={{height:'9%',width:'100%'}} onClick={testCallback}>Force Add</Button> */}
-        <Button style={{height:'9%',width:'100%', borderLeftColor: 'black'}} onClick={() => setClickSpot(null)}>Cancel Select</Button> 
+        <Button style={{height:'9%',width:'100%', borderLeftColor: 'black'}} onClick={() => setClickSpot(null)}>Cancel Select</Button>
+        <Button style={{height:'9%',width:'100%', borderLeftColor: 'black'}} onClick={updateWaypoints}>Add Waypoint</Button>
       </ButtonGroup>
+      <InputGroup>
+          Lat:
+          <Form.Control name="lat" type="number" ref={wayLat}/>
+          Lng:
+          <Form.Control name="lng" type="number" ref={wayLng}/>
+      </InputGroup>
     </>
   );  
 }

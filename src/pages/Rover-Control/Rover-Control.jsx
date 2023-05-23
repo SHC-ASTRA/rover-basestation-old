@@ -130,7 +130,7 @@ function map() {
             <Card.Header className = "h5">
                 Map
             </Card.Header>
-            <Card.Body>
+            <Card.Body style={{height:"500%"}}>
                 <RoverMap />
             </Card.Body>
         </Card>
