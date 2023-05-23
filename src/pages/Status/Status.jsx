@@ -13,7 +13,7 @@ function rosFeed() {
     
     const updateFeed = (message) => {
         var log = new Date().toTimeString().split(' ')[0];
-        ROSFeed.val('[' + time + '] ' + log + ROSFeed.val());
+        ROSFeed.val(log + ROSFeed.val());
     };
 
     rosNode.rosout_sub.subscribe(updateFeed);

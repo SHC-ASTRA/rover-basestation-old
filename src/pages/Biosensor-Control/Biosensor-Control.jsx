@@ -249,7 +249,7 @@ function rosFeed() {
     
     const updateFeed = (message) => {
         var log = new Date().toTimeString().split(' ')[0];
-        ROSFeed.val('[' + time + '] ' + log + ROSFeed.val());
+        ROSFeed.val(log + ROSFeed.val());
     };
     useEffect(()=>{
         rosNode.bio_sub.subscribe(updateFeed);

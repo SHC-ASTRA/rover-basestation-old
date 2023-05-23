@@ -1,5 +1,5 @@
 import { Container, InputGroup, Form, Button, Card, Dropdown} from 'react-bootstrap';
-import React, { useEffect, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import './Rover-Control.css';
 import ros from '../../utilities/ROS/ROS';
 import RoverMap from './roverMap';
@@ -28,6 +28,7 @@ function CreateOption(num){
 }
 
 function controlPanel() {
+    const [motorPowerDisp,setMotorPowerDisp] = useState(50);
     const [metrics, setMetrics] = useState([0.0, 0.0, 0.0])
     const [controllers, setControllers ]= useState(navigator.getGamepads());
     const [enabled, setEnabled] = useState(false);
@@ -46,6 +47,7 @@ function controlPanel() {
     rosNode.battery_sub.subscribe((msg)=>{setMetrics([msg.batteryVoltage,metrics.slice(1)])});
     rosNode.gps_sub.subscribe((msg)=>{setMetrics([metrics[0],msg.ground_speed,metrics.slice(2)])});
     useEffect(()=>{
+    
       window.addEventListener("gamepadconnected",(e)=>{
         setControllers(navigator.getGamepads());
         console.log("added controller");
@@ -64,7 +66,7 @@ function controlPanel() {
             
         },50);
       }
-    },[enabled,])
+    },[enabled,motorPowerDisp,])
     const enableButtonClick = () => {
         var controller = document.getElementById("controllerSelected")
         var controllerText = controller.options[controller.selectedIndex].text
@@ -82,6 +84,10 @@ function controlPanel() {
             <Card.Body>
                 <div className = "d-grid">
                     <img src = "./RoverTop.png" style={{height:"200px", width:"200px"}}/>
+                    <InputGroup>
+                    <Form.Range style={{width:'75%'}} onChange={(val)=>{setMotorPowerDisp(val.target.value)}}></Form.Range>
+                    <InputGroup.Text  style={{width:"20%", height:"80%"}} >{motorPowerDisp}</InputGroup.Text>
+                    </InputGroup>
                     <InputGroup>
                         <InputGroup.Text>Controller</InputGroup.Text>
                         <Form.Select id = "controllerSelected">
