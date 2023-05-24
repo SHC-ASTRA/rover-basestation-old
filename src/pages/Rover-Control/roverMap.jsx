@@ -10,6 +10,7 @@ import { useCallback } from 'react';
 
 
 function RoverMap() {
+  
   const {rosState} = useContext(RosContext);
   const [markers, setMarkers] = useState([null]);
   const [clickSpot, setClickSpot] = useState(null);
@@ -68,10 +69,12 @@ function RoverMap() {
             </Popup>
           </Marker>
         )}
-        {waypoint?.map((val)=>{
+        {waypoint?.map((val,idx)=>{
           if(val){
             return(
-                <Marker position={val} />
+                <Marker position={val} >
+                  <Popup>Waypoint {idx+1}</Popup>
+                </Marker>
               );
           }
           
@@ -79,9 +82,9 @@ function RoverMap() {
         <MapClickHandler onMapClick={(e)=>setClickSpot(e.latlng)} />
       </MapContainer>
       <ButtonGroup>  
-        <Button style={{height:'9%',width:'100%'}} onClick={()=>{setMarkers([null]);setWaypoint([null]);}}>Reset Rover Path</Button> 
+        <Button style={{height:'9%',width:'100%', borderRightColor:'black'}} onClick={()=>{setMarkers([null]);setWaypoint([null]);}}>Reset Rover Path</Button> 
         {/*<Button style={{height:'9%',width:'100%'}} onClick={testCallback}>Force Add</Button> */}
-        <Button style={{height:'9%',width:'100%', borderLeftColor: 'black'}} onClick={() => setClickSpot(null)}>Cancel Select</Button>
+        <Button style={{height:'9%',width:'100%', borderLeftColor: 'black',borderRightColor:'black'}} onClick={() => setClickSpot(null)}>Cancel Select</Button>
         <Button style={{height:'9%',width:'100%', borderLeftColor: 'black'}} onClick={updateWaypoints}>Add Waypoint</Button>
       </ButtonGroup>
       <InputGroup>
