@@ -1,5 +1,5 @@
 import { Container, InputGroup, Form, CardGroup, Card} from 'react-bootstrap';
-import { useState } from 'react'
+import { createRef, useState } from 'react'
 import './Status.css';
 import { RosContext } from '../../utilities/ROS/RosContext';
 import React from 'react';
@@ -10,20 +10,24 @@ import { useContext } from 'react';
 import { useEffect } from 'react';
 
 function rosFeed() {
+    const feedVal = createRef();
     
-    const updateFeed = (message) => {
-        var log = new Date().toTimeString().split(' ')[0];
-        ROSFeed.val(log + ROSFeed.val());
-    };
-
-    rosNode.rosout_sub.subscribe(updateFeed);
+        
+        const updateFeed = (log) => {
+            var time = new Date().toTimeString().split(' ')[0];
+            feedVal.current.value = '[' + time + '] ' + log + '\n' ;    
+        };
+    
+        rosNode.rosout_sub.subscribe(updateFeed);
+    
+    
     return(
         <Card style = {{width: "100%"}}>
             <Card.Header className = "h5">
                 ROS Feed
             </Card.Header>
             <Card.Body>
-                <InputGroup.Text id = "ROSFeed" className = "feed">
+                <InputGroup.Text id = "ROSFeed" className = "feed" ref ={feedVal}>
                 </InputGroup.Text>
             </Card.Body>
         </Card>

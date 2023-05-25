@@ -37,13 +37,16 @@ function RoverMap() {
     
     if(wayLat.current && wayLng.current){
       waypoints.push([wayLat.current.value,wayLng.current.value]);
+      wayLat.current.value = "";
+      wayLng.current.value="";
     }
     setWaypoint(waypoints);
   });
-    
+    //MDRC: [38.4063,-110.7918]
+    //Behind optics: [34.722063,-86.638750]
   return (
     <>
-      <MapContainer center={[38.4063,-110.7918]} zoom={13} scrollWheelZoom={false} style={{height:'95%',width:'100%'}} maxZoom={18} minZoom={12} onClick={locateClick}>
+      <MapContainer center={[34.722063,-86.638750]} zoom={13} scrollWheelZoom={false} style={{height:'95%',width:'100%'}} maxZoom={18} minZoom={12} onClick={locateClick}>
         <ScaleControl position='bottomright' />
         <TileLayer  url="./map2/{z}/{x}/{y}.png"/>
         {markers?.map((val,idx,positions)=>{
@@ -73,11 +76,10 @@ function RoverMap() {
           if(val){
             return(
                 <Marker position={val} >
-                  <Popup>Waypoint {idx+1}</Popup>
+                  <Popup>Waypoint {idx}</Popup>
                 </Marker>
               );
           }
-          
         })}
         <MapClickHandler onMapClick={(e)=>setClickSpot(e.latlng)} />
       </MapContainer>
