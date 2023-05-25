@@ -27,7 +27,7 @@ function rosFeed() {
                 ROS Feed
             </Card.Header>
             <Card.Body>
-                <InputGroup.Text id = "ROSFeed" className = "feed" ref ={feedVal}>
+                <InputGroup.Text id = "ROSFeed" className = "feed" ref ={feedVal } value={"hellp"}>
                 </InputGroup.Text>
             </Card.Body>
         </Card>
