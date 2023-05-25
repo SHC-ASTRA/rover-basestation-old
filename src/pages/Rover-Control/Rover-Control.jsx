@@ -39,11 +39,13 @@ function controlPanel() {
 
     const publishControllerData = (left,right) =>{
         console.log(left,right);
+        var rightUpdate = new ROSLIB.Message({data: right});
+        var leftUpdate = new ROSLIB.Message({data:left});
         //Change this to include check for the dead area
-        rosNode.fr_motor_pub.publish(right);
-        rosNode.br_motor_pub.publish(right);
-        rosNode.fl_motor_pub.publish(left);
-        rosNode.bl_motor_pub.publish(left);
+        rosNode.fr_motor_pub.publish(rightUpdate);
+        rosNode.br_motor_pub.publish(rightUpdate);
+        rosNode.fl_motor_pub.publish(leftUpdate);
+        rosNode.bl_motor_pub.publish(leftUpdate);
     }
     rosNode.battery_sub.subscribe((msg)=>{setMetrics([msg.batteryVoltage,metrics.slice(1)])});
     rosNode.gps_sub.subscribe((msg)=>{setMetrics([metrics[0],msg.ground_speed,metrics.slice(2)])});
@@ -162,7 +164,7 @@ function orientation() {
         setPitch(180 * Math.atan (accX/Math.sqrt(accY*accY + accZ*accZ))/Math.PI);
         setRoll (180 * Math.atan2(accY, accZ)/Math.PI);
     });
-    return(
+    return( 
         <Card style = {{width: "25%"}}>
             <Card.Header className = "h5">
                 Orientation
