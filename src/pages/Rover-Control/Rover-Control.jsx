@@ -7,6 +7,7 @@ import RosContextProvider from '../../utilities/ROS/RosContext';
 import { rosNode } from '../../utilities/ROS/ROS';
 import useController from '../../utilities/userController';
 import ROSLIB from 'roslib';
+import { useCallback } from 'react';
 //We gonna need a couple things 
 
 
@@ -33,7 +34,7 @@ function controlPanel() {
     const [metrics, setMetrics] = useState([0.0, 0.0, 0.0])
     const [controllers, setControllers ]= useState(navigator.getGamepads());
     const [enabled, setEnabled] = useState(false);
-    const [selIndex, setSelIndex] = useState(0);
+    const [selIndex, setSelIndex] = useState(null);
     const [leftInput, setLeftInput] = useState(0);
     const [rightInput, setRightInput] = useState(0);
 
@@ -50,7 +51,8 @@ function controlPanel() {
     rosNode.battery_sub.subscribe((msg)=>{setMetrics([msg.batteryVoltage,metrics.slice(1)])});
     rosNode.gps_sub.subscribe((msg)=>{setMetrics([metrics[0],msg.ground_speed,metrics.slice(2)])});
     useEffect(()=>{
-    
+        //console.log(enabled);
+        //console.log(selIndex);
       window.addEventListener("gamepadconnected",(e)=>{
         setControllers(navigator.getGamepads());
         console.log("added controller");
@@ -68,6 +70,7 @@ function controlPanel() {
             publishControllerData(-1*controller.axes[1],-1* controller.axes[3]);
             
         },50);
+        return ()=>{clearInterval(interval)}
       }
     },[enabled,motorPowerDisp,])
     const enableButtonClick = () => {
@@ -77,6 +80,11 @@ function controlPanel() {
         setSelIndex(controller.selectedIndex);
         console.log(controller.selectedIndex);
         console.log("Enabling controller: " + controllerText);
+    };
+    const disableButtonClick = ()=>{
+        setEnabled(false);
+        setSelIndex(null);
+        
     };
 
     return(
@@ -109,10 +117,11 @@ function controlPanel() {
                             })}
                         </Form.Select>
                         <Button 
-                            onClick = {enableButtonClick}
+                            onClick = {enabled ? disableButtonClick:enableButtonClick}
                             className = "btn-success"
+                            style={{backgroundColor: enabled ? 'red' : 'green'}}
                         >
-                            Enable
+                            {enabled ? "Disable" : "Enable"}
                         </Button>
                         
                     </InputGroup>

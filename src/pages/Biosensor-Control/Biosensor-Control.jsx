@@ -167,20 +167,21 @@ function carousel() {
     );
 }
 function rosFeed() {
-    
+    const [feed, setFeed] = useState(null);
     const updateFeed = (message) => {
-        var log = new Date().toTimeString().split(' ')[0];
-        ROSFeed.val(log + ROSFeed.val());
+        let prevFeed = [...feed];
+        var time = new Date().toTimeString().split(' ')[0];
+        setFeed('[' + time + '] ' + message.data + '\n' +prevFeed);
     };
-    useEffect(()=>{
-        rosNode.bio_sub.subscribe(updateFeed);
-    })
+    
+    rosNode.bio_sub.subscribe(updateFeed);
+    
     
     return(
         <Card style = {{width: "100%"}}>
             <Card.Header className='h5'>Rover Feed</Card.Header>
             <Card.Body>
-                <InputGroup.Text id = "ROSFeed" className = "feed">
+                <InputGroup.Text id = "ROSFeed" className = "feed">{feed}
                 </InputGroup.Text>
             </Card.Body>
         </Card>
@@ -209,9 +210,15 @@ function serialCmdHandler(){
             <Card.Header className='h5'>Command</Card.Header>
             <Card.Body>
                 <Form.Control name="Command" type="text" ref ={cmd} onKeyPress={handleKey}/>
-                <ButtonGroup>
-                    <Button onClick={send_btn_click}>Send</Button>
-                </ButtonGroup>
+                
+                <div className='d-grid'>
+                <Button onClick={send_btn_click}>Send</Button>
+                <Button  variant='danger' onClick={()=>{send_cmd("stop")}}>Stop</Button>    
+                </div>
+                
+            
+                
+                
             </Card.Body>
         </Card>
     );

@@ -15,7 +15,8 @@ function rosFeed() {
         
         const updateFeed = (log) => {
             var time = new Date().toTimeString().split(' ')[0];
-            feedVal.current.value = '[' + time + '] ' + log + '\n' ;    
+            console.log(time);
+            feedVal.current.value = '[' + time + '] ' + log.msg + '\n' +feedVal.current.value;    
         };
     
         rosNode.rosout_sub.subscribe(updateFeed);
@@ -27,7 +28,7 @@ function rosFeed() {
                 ROS Feed
             </Card.Header>
             <Card.Body>
-                <InputGroup.Text id = "ROSFeed" className = "feed" ref ={feedVal } value={"hellp"}>
+                <InputGroup.Text id = "ROSFeed" className = "feed" ref={feedVal} value={"hellp"}>
                 </InputGroup.Text>
             </Card.Body>
         </Card>
@@ -60,7 +61,7 @@ function diagnostics() {
     });
 
     rosNode.bio_sub.subscribe((data)=>{
-        toUpdate[2] = data ? true : false;
+        toUpdate[2] = data.data ? true : false;
         setStatus(toUpdate);
     });
 
@@ -78,7 +79,7 @@ function diagnostics() {
         toUpdate[5] = data ? true: false;
     })
     
-    //DO CONTROLLER ONCE FIND HOW DO
+
     useEffect(()=>{
         let updatedStatus = [...status];
         
@@ -140,10 +141,12 @@ function usageBar(name, barColor, inUsage) {
 function usage() {
     const [usages, setUsages] = useState([0,0,0])
     const updateUsage = (message) => {
-        setUsages([message.cpu_usage.toFixed(2), message.gpu_usage.toFixed(2), message.mem_usage.toFixed(2)])
+        console.log(message);
+        setUsages([message.cpu_usage.toFixed(2), message.gpu_usage.toFixed(2), message.mem_usage.toFixed(2)]);
+        console.log(usages);
     };
 
-  
+    
     rosNode.performance_sub.subscribe(updateUsage);
     
 

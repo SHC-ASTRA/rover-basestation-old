@@ -16,16 +16,7 @@ ros.on('close', () => {
 });
 
 export const rosNode = { //OBject to hold all of the lisnteners when its time to listen
-    /*
-        DOESN'T INCLUDE BIOSENSOR COMMANDS & more check last year code and cross reference (just for today, am working on topics)
-        Note that cmd_client is included in this object
-        since last year did it through a central funcition syntax:
-        function send_command(cmd)
-        var request = new ROSLIB.ServiceRequest({
-            command: cmd
-        });
-        cmd_client.callService(request)
-    */ 
+
     gps_sub : new ROSLIB.Topic({
         ros: ros,
         name: '/teensy/gps',
