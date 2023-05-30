@@ -224,6 +224,36 @@ function serialCmdHandler(){
     );
 }
 
+function PTC_Slider(){
+    const [yaw,setYaw] = useState(90);
+    const [camPitch,setCamPitch] = useState(90);
+
+    return(
+        <Card>
+            <Card.Header className='h5'>Camera Control</Card.Header>
+            <Card.Body>
+                <InputGroup>
+                    Camera Yaw
+                    <Form.Range onChange={(val)=>{setYaw(val.target.value*180/100)}}></Form.Range>
+                    <InputGroup.Text>{yaw}</InputGroup.Text>
+                </InputGroup>
+                <InputGroup>
+                    Camera Pitch
+                    <Form.Range onChange={(val)=>{setCamPitch(val.target.value*180/100)}}></Form.Range>
+                    <InputGroup.Text>{camPitch}</InputGroup.Text>
+                </InputGroup>
+
+                    
+                
+            </Card.Body>
+        </Card>
+        
+                
+        
+        
+    );
+}
+
 function BiosensorControl() {
     return (
         <Container className="p-4">
@@ -232,7 +262,7 @@ function BiosensorControl() {
                 {carousel()}
                 {fansPumps()}
                 {servosActuator()}
-                
+                {PTC_Slider()}
             </div>
             <div className='card-deck'>
                 {serialCmdHandler()}

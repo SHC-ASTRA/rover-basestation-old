@@ -26,6 +26,9 @@ function AstraNavbar() {
                         <LinkContainer to="/Autonomous-Control">
                             <Nav.Link>Autonomous Control</Nav.Link>
                         </LinkContainer>
+                        <LinkContainer to="/Camera-Control">
+                            <Nav.Link>Camera Control</Nav.Link>
+                        </LinkContainer>
                     </Nav>
                 </Navbar.Collapse>
                 <Navbar.Text className="text-white">
