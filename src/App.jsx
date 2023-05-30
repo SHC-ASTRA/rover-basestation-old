@@ -8,6 +8,7 @@ import ArmControl from './pages/Arm-Control/Arm-Control';
 import BiosensorControl from './pages/Biosensor-Control/Biosensor-Control';
 import AutonomousControl from './pages/Autonomous-Control/Autonomous-Control';
 import RosContextProvider from './utilities/ROS/RosContext';
+import CameraControl from './pages/Camera-Control/Camera-Control';
 
 function App() {
     return (
@@ -28,6 +29,10 @@ function App() {
                     <Route
                         path="/Autonomous-Control"
                         element={<AutonomousControl />}
+                    ></Route>
+                    <Route 
+                        path='/Camera-Control'
+                        element={<CameraControl />}
                     ></Route>
                 </Routes>
             </Router>
