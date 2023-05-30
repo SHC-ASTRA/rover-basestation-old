@@ -13,7 +13,7 @@ function ip_input(){
 
     useEffect(()=>{
         fetch(`http://${ip}`)
-            .then(()=>Response.text())
+            .then(()=>response.text())
             .then((data)=>{
                 setCameras(data.split("\n"));
             })
@@ -33,7 +33,7 @@ function ip_input(){
                 <Form.Select onChange={(val)=>{setSelCam(val.target.value)}}>
                     {cameras?.map((val,idx)=>{
                         return(
-                            <option value={idx}>Camera {idx+1}</option>
+                            <option key ={idx} value={idx}>Camera {idx+1}</option>
                         );
                     })}
                 </Form.Select>     
@@ -42,7 +42,7 @@ function ip_input(){
         <Card style={{width:'100%'}}>
             <Card.Header>Video Stream</Card.Header>
             <Card.Body>
-                    <video src={selCam} type="video/mp4"></video>
+                    <video src={`http://${ip}/${selCam}`} type="video/mp4"></video>
             </Card.Body>
         </Card>
         </>
