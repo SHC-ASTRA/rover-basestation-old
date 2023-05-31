@@ -46,7 +46,7 @@ function RoverMap() {
     //Behind optics: [34.722063,-86.638750]
   return (
     <>
-      <MapContainer center={[34.722063,-86.638750]} zoom={13} scrollWheelZoom={false} style={{height:'95%',width:'100%'}} maxZoom={18} minZoom={12} onClick={locateClick}>
+      <MapContainer center={[38.4063,-110.7918]} zoom={13} scrollWheelZoom={false} style={{height:'95%',width:'100%'}} maxZoom={18} minZoom={12} onClick={locateClick}>
         <ScaleControl position='bottomright' />
         <TileLayer  url="./map2/{z}/{x}/{y}.png"/>
         {markers?.map((val,idx,positions)=>{

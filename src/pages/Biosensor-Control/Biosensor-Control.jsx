@@ -3,7 +3,7 @@ import { Container, Card, InputGroup, Form, Button, ButtonGroup, Dropdown } from
 import { useState, useEffect, useRef } from 'react';
 import { rosNode, send_cmd } from '../../utilities/ROS/ROS';
 import RosContextProvider from '../../utilities/ROS/RosContext';
-
+import './Biosensor-Control.css';
 
 function inputDouble(name, first, second, doubleRef, textWidth) {
     const doubleRefAgain = useRef()
@@ -167,11 +167,13 @@ function carousel() {
     );
 }
 function rosFeed() {
-    const [feed, setFeed] = useState(null);
-    const updateFeed = (message) => {
-        let prevFeed = [...feed];
-        var time = new Date().toTimeString().split(' ')[0];
-        setFeed('[' + time + '] ' + message.data + '\n' +prevFeed);
+    const [feed, setFeed] = useState([]);
+    const updateFeed = (log) => {
+        setFeed((prevFeed)=>{
+            var f = [...prevFeed]
+            var time = new Date().toTimeString().split(' ')[0];
+            f.push({t:time, d:log.data});
+            return(f)});
     };
     
     rosNode.bio_sub.subscribe(updateFeed);
@@ -181,8 +183,17 @@ function rosFeed() {
         <Card style = {{width: "100%"}}>
             <Card.Header className='h5'>Rover Feed</Card.Header>
             <Card.Body>
-                <InputGroup.Text id = "ROSFeed" className = "feed">{feed}
-                </InputGroup.Text>
+                <div id = "ROSFeed" className = "feed" >{feed.map((e,i)=>{
+                    return(
+                        <div key={i}>
+                            {e.t}
+                            {" "}
+                            {e.d}
+                        </div>
+                    );
+                })}
+                </div>
+                <Button onClick={()=>{updateFeed({data: 'hello'})}}></Button>
             </Card.Body>
         </Card>
     );
