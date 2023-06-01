@@ -76,7 +76,7 @@ export const rosNode = { //OBject to hold all of the lisnteners when its time to
         name: '/bio/bio_command',
         serviceType: '/bio_relay/BioCommand'
       }),
-
+    
 
     motor_power_pub: new ROSLIB.Topic({
         ros: ros,
@@ -131,8 +131,25 @@ export const rosNode = { //OBject to hold all of the lisnteners when its time to
         messageType: 'std_msgs/String'
     }),
 
+    aruco_pub: new ROSLIB.Topic({
+        ros:ros,
+        name:'/arucoToggle',
+        messageType: 'std_msgs/Bool'
+    }),
     
+    goal_reached_sub: new ROSLIB.Topic({
+        ros:ros,
+        name:'/goal_reached',
+        messageType: 'std_msgs/String'
+    }),
+
+    aruco_nav_tol_sub: new ROSLIB.Topic({
+        ros:ros,
+        name: '/nav_tol',
+        messageType: 'std_msgs/int16'
+    })
     };
+
     
 export function send_cmd(cmd){
     

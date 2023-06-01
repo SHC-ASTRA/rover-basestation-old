@@ -17,8 +17,11 @@ function AutonomousControl() {
     const secEast = createRef();
     const degNorth = createRef();
     const degEast  = createRef();
+    const navRange = createRef();
     const [searchParams] = useSearchParams();
     const {rosState} = useContext(RosContext);
+    const [aruco,setAruco] =useState(false);
+    const [goalReached,setGoalReached] = useState('');
     const [coordState, setCoordState] = useState({
         latitude: 0,
         longitude: 0,
@@ -26,6 +29,8 @@ function AutonomousControl() {
         altitude: 0,
         accuracy: 3.0
     });
+
+    rosNode.goal_reached_sub.subscribe((data)=>{setGoalReached(data.data)});
 
     const updateCoordState = (lat, long, target) => {
         if (lat.current) {
@@ -62,6 +67,12 @@ function AutonomousControl() {
                 longitude: coordState.longitude,
                 accuracy: 3.0
             });
+            if(navRange.current.value){
+                navRng = new ROSLIB.Message({
+                    data: navRange.current.value
+                });
+                rosNode.aruco_nav_tol_sub.publish(navRng);
+            }
 
             rosNode.nav_command_pub.publish(nav_cmd);
             rosNode.nav_gps_pub.publish(gps_goal);
@@ -75,7 +86,7 @@ function AutonomousControl() {
         console.log("Autonomous mode aborting...");
         abort_cmd = new ROSLIB.Message({
             target: "Abort",
-            latitude: latitude.current.value,
+            latitude: latitude.current.value, 
             longitude: longitude.current.value,
             accuracy: 3.0
         });
@@ -108,6 +119,7 @@ function AutonomousControl() {
         
     });
 
+    
     return (
         <Container className = "p-4">
             <Card>
@@ -168,6 +180,10 @@ function AutonomousControl() {
                                 <Button onClick={convertMins}>Convert</Button>
                             
                         </InputGroup>
+                        <InputGroup>
+                            <InputGroup.Text>Aruco nav Range</InputGroup.Text>
+                            <Form.Control name='navRange' type='number' ref={navRange} />
+                        </InputGroup>
                         <ButtonGroup>
                             <Button 
                                 className = "btn-info"
@@ -194,10 +210,16 @@ function AutonomousControl() {
                             >
                                 Abort
                             </Button>
+                            <Button onClick={()=>{setAruco(!aruco);
+                                arucoState = new ROSLIB.Message({
+                                    data:aruco
+                                })
+                                rosNode.aruco_pub.publish(arucoState)}}>{aruco ? "Disable Aruco" : "Enable Aruco"}</Button>
                         </ButtonGroup>
                         <InputGroup.Text 
                             className = "feed"
-                        >
+                        >{goalReached}
+                            
                         </InputGroup.Text>
                     </div>
                 </Card.Body>

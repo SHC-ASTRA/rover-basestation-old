@@ -244,12 +244,12 @@ function PTC_Slider(){
             <Card.Header className='h5'>Camera Control</Card.Header>
             <Card.Body>
                 <InputGroup>
-                    Camera Yaw
+                    Camera Pan
                     <Form.Range onChange={(val)=>{setYaw(val.target.value*180/100)}}></Form.Range>
                     <InputGroup.Text>{yaw}</InputGroup.Text>
                 </InputGroup>
                 <InputGroup>
-                    Camera Pitch
+                    Camera Tilt
                     <Form.Range onChange={(val)=>{setCamPitch(val.target.value*180/100)}}></Form.Range>
                     <InputGroup.Text>{camPitch}</InputGroup.Text>
                 </InputGroup>
