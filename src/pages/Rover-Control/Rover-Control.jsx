@@ -97,7 +97,7 @@ function controlPanel() {
                     <img src = "./RoverTop.png" style={{height:"200px", width:"200px"}}/>
                     <InputGroup>
                     <Form.Range style={{width:'75%'}} onChange={(val)=>{
-                        setMotorPowerDisp(val.target.value);
+                        enabled ? setMotorPowerDisp(val.target.value):{};
                         var powerControlUpdate = new ROSLIB.Message({
                             data:val.target.value/100.0
                         });
