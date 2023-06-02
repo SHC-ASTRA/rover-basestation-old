@@ -1,5 +1,5 @@
-import { MapContainer,TileLayer,useMap,Marker,Popup, ScaleControl, useMapEvents } from 'react-leaflet';
-import L, { marker } from "leaflet";
+import { MapContainer,TileLayer,useMap,Marker,Popup, ScaleControl, useMapEvents, Circle } from 'react-leaflet';
+import L, { circle, marker } from "leaflet";
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, ButtonGroup, InputGroup, FormControl,Form} from 'react-bootstrap';
 import { RosContext } from '../../utilities/ROS/RosContext';
@@ -15,9 +15,20 @@ function RoverMap() {
   const [markers, setMarkers] = useState([null]);
   const [clickSpot, setClickSpot] = useState(null);
   const nav = useNavigate();
+  const [rockGarden,setRockGarden] = useState(null)
   const [waypoint,setWaypoint] =  useState([null]);
   const wayLat = createRef();
   const wayLng = createRef();
+
+  var updateGarden = useCallback(()=>{
+    var lat = wayLat.current.value;
+    var lng = wayLng.current.value;
+    setRockGarden({
+      center: [lat,lng],
+      radius: 20
+    });
+  });
+
   if(rosState === 'Connected'){
     rosNode.gps_sub.subscribe((newCord)=>{
       if(markers!=null){
@@ -61,6 +72,7 @@ function RoverMap() {
             );
           }
         })}
+        {rockGarden  && (<Circle center={rockGarden.center} radius={rockGarden.radius} pathOptions={{color:'black'}}/>)}
         {clickSpot && (
           <Marker position={clickSpot} icon={L.icon({ iconUrl: './target.png', iconSize: [150] })}>
             <Popup>
@@ -89,11 +101,13 @@ function RoverMap() {
         <Button style={{height:'9%',width:'100%', borderLeftColor: 'black',borderRightColor:'black'}} onClick={() => setClickSpot(null)}>Cancel Select</Button>
         <Button style={{height:'9%',width:'100%', borderLeftColor: 'black'}} onClick={updateWaypoints}>Add Waypoint</Button>
       </ButtonGroup>
+      <br></br>
       <InputGroup>
           Lat:
           <Form.Control name="lat" type="number" ref={wayLat}/>
           Lng:
           <Form.Control name="lng" type="number" ref={wayLng}/>
+          <Button onClick={updateGarden}>Add Rock Garden</Button>
       </InputGroup>
     </>
   );  
