@@ -1,43 +1,47 @@
 import { Container, InputGroup, Form, CardGroup, Card} from 'react-bootstrap';
-import { useState } from 'react'
+import { createRef, useState } from 'react'
 import './Status.css';
-import ros from '../../utilities/ROS/ROS'
-
-var lidar_sub;
+import { RosContext } from '../../utilities/ROS/RosContext';
+import React from 'react';
+import { rosNode } from '../../utilities/ROS/ROS';
+import ros from '../../utilities/ROS/ROS';
+import RosContextProvider from '../../utilities/ROS/RosContext';
+import { useContext } from 'react';
+import { useEffect } from 'react';
 
 function rosFeed() {
-    const updateFeed = (message) => {
-        var log = new Date().toTimeString().split(' ')[0];
-        ROSFeed.val('[' + time + '] ' + log + ROSFeed.val());
-    };
-
-    var rosoutSub = new ROSLIB.Topic({
-        ros: ros,
-        name: '/rosout',
-        messageType: 'rosgraph_msgs/Log'
-    });
-    rosoutSub.subscribe(updateFeed)
-
+    const feedVal = createRef();
+    
+        
+        const updateFeed = (log) => {
+            var time = new Date().toTimeString().split(' ')[0];
+            console.log(time);
+            feedVal.current.value = '[' + time + '] ' + log.msg + '\n' +feedVal.current.value;    
+        };
+    
+        rosNode.rosout_sub.subscribe(updateFeed);
+    
+    
     return(
         <Card style = {{width: "100%"}}>
             <Card.Header className = "h5">
                 ROS Feed
             </Card.Header>
             <Card.Body>
-                <InputGroup.Text id = "ROSFeed" className = "feed">
+                <InputGroup.Text id = "ROSFeed" className = "feed" ref={feedVal} value={"hellp"}>
                 </InputGroup.Text>
             </Card.Body>
         </Card>
     );
 }
 
-function diagnosticIndicator(name, inStatus) {
-    const [status, setStatus] = useState(inStatus);
-
+function diagnosticIndicator(name, status) {
+    
+    
     return(
         <div>
             <InputGroup>
-                <InputGroup.Text className = "indicator" style = {{backgroundColor: status ? "rgb(54, 146, 54)" : "rgb(198, 54, 54)"}}></InputGroup.Text>
+                <InputGroup.Text className = "indicator" style = {{backgroundColor: status ? "rgb(54, 146, 54)":"rgb(198, 54, 54)" }}></InputGroup.Text>
                 <Form.Control
                     value={name}
                 readOnly/>
@@ -47,8 +51,50 @@ function diagnosticIndicator(name, inStatus) {
 }
 
 function diagnostics() {
-    const [status, setStatus] = useState([false, false, false, false, false, false, false, false])
+    const [status, setStatus] = useState([false, false, false, false, false, false, false])
+    const {rosState} = useContext(RosContext);
+    let toUpdate = [...status];
+    
+    rosNode.ab_status_sub.subscribe((msg) =>{
+        toUpdate[1] = msg.enabled ? true : false;
+        setStatus(toUpdate);
+    });
 
+    rosNode.bio_sub.subscribe((data)=>{
+        toUpdate[2] = data.data ? true : false;
+        setStatus(toUpdate);
+    });
+
+    rosNode.lidar_sub.subscribe((msg)=>{
+        toUpdate[3] = msg ? true: false;
+        setStatus(toUpdate);
+    });
+
+    rosNode.imu_sub.subscribe((data)=>{
+        toUpdate[4] = data ? true: false;
+        setStatus(toUpdate);
+    });
+
+    rosNode.battery_sub.subscribe((data) =>{
+        toUpdate[5] = data ? true: false;
+    })
+    
+
+    useEffect(()=>{
+        let updatedStatus = [...status];
+        
+        if(rosState=='Connected'){
+            updatedStatus[0] = true
+            
+        }
+        else{
+            updatedStatus[0] = false;
+            
+        }
+        setStatus(updatedStatus);
+    },[rosState]);
+    
+    
     return(
         <Card style = {{width: "25%"}}>
             <Card.Header className = "h5">
@@ -56,14 +102,15 @@ function diagnostics() {
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
-                    {diagnosticIndicator("Communications", status[0])}
+                    
+                    {diagnosticIndicator("Communications", status[0])/* Needs testing*/}
                     {diagnosticIndicator("Arm Base", status[1])}
                     {diagnosticIndicator("Biosensor", status[2])}
-                    {diagnosticIndicator("Drone", status[3])}
-                    {diagnosticIndicator("LiDar", status[4])}
-                    {diagnosticIndicator("IMU", status[5])}
-                    {diagnosticIndicator("Teensy", status[6])}
-                    {diagnosticIndicator("Controller", status[7])}
+                    {/*diagnosticIndicator("Drone", status[3]) Maybe some day :'(*/}
+                    {diagnosticIndicator("LiDar", status[3])}
+                    {diagnosticIndicator("IMU", status[4])}
+                    {diagnosticIndicator("Teensy", status[5])}
+                    {diagnosticIndicator("Controller", status[6])}
                 </div>
             </Card.Body>
         </Card>
@@ -94,15 +141,14 @@ function usageBar(name, barColor, inUsage) {
 function usage() {
     const [usages, setUsages] = useState([0,0,0])
     const updateUsage = (message) => {
-        setUsages([message.cpu_usage.toFixed(2), message.gpu_usage.toFixed(2), message.mem_usage.toFixed(2)])
+        console.log(message);
+        setUsages([message.cpu_usage.toFixed(2), message.gpu_usage.toFixed(2), message.mem_usage.toFixed(2)]);
+        console.log(usages);
     };
 
-    var performanceSub = new ROSLIB.Topic({
-        ros: ros,
-        name: '/jetson/performance_report',
-        messageType: 'jetson_performance_reporter/PerformanceReport',
-    });
-    performanceSub.subscribe(updateUsage)
+    
+    rosNode.performance_sub.subscribe(updateUsage);
+    
 
     return(
         <Card style = {{width: "25%"}}>
@@ -141,12 +187,8 @@ function gps() {
         setMetrics([message.latitude, message.longitude, message.altitude, message.horizontal_accuracy, message.timestamp])
     }; 
 
-    var gpsSub = new ROSLIB.Topic({
-        ros: ros,
-        name: '/teensy/gps',
-        messageType: 'embedded_controller_relay/NavSatReport',
-    });
-    gpsSub.subscribe(updateGPS)
+
+    rosNode.gps_sub.subscribe(updateGPS);
 
     return(
         <Card style = {{width: "25%"}}>
@@ -172,13 +214,8 @@ function battery() {
         setMetrics([message.batteryVoltage.toFixed(1), (message.batteryCharge * 100).toFixed(2)])
     };
 
-    var batterySub = new ROSLIB.Topic({
-        ros: ros,
-        name: '/teensy/battery_status',
-        messageType: 'embedded_controller_relay/BatteryReport',
-    });
-    batterySub.subscribe(updateBattery)
-
+    
+    rosNode.battery_sub.subscribe(updateBattery);
     return(
         <Card style = {{width: "25%"}}>
             <Card.Header className = "h5">
@@ -197,6 +234,7 @@ function battery() {
 function Status() {
     return (
         <Container className = "p-4">
+            <RosContextProvider>
             <div className = "card-deck">
                 {gps()}
                 {usage()}
@@ -206,6 +244,7 @@ function Status() {
             <div className = "card-deck">
                 {rosFeed()}
             </div>
+            </RosContextProvider>
         </Container>
     );
 }

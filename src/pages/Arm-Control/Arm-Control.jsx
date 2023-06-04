@@ -1,5 +1,5 @@
 import { Container } from 'react-bootstrap';
-
+import React from 'react';
 function ArmControl() {
     return (
             <Container style = {{height: '89vh'}}>

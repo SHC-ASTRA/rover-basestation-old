@@ -1,3 +1,4 @@
+import React from 'react';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import NavbarRosStatus from './NavbarRosStatus';
@@ -24,6 +25,9 @@ function AstraNavbar() {
                         </LinkContainer>
                         <LinkContainer to="/Autonomous-Control">
                             <Nav.Link>Autonomous Control</Nav.Link>
+                        </LinkContainer>
+                        <LinkContainer to="/Camera-Control">
+                            <Nav.Link>Camera Control</Nav.Link>
                         </LinkContainer>
                     </Nav>
                 </Navbar.Collapse>

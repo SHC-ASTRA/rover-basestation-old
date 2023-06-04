@@ -1,5 +1,9 @@
+import React, { createRef, useCallback } from 'react';
 import { Container, Card, InputGroup, Form, Button, ButtonGroup, Dropdown } from 'react-bootstrap'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react';
+import { rosNode, send_cmd } from '../../utilities/ROS/ROS';
+import RosContextProvider from '../../utilities/ROS/RosContext';
+import './Biosensor-Control.css';
 
 function inputDouble(name, first, second, doubleRef, textWidth) {
     const doubleRefAgain = useRef()
@@ -91,22 +95,23 @@ function inputGo(name, goRef, textWidth) {
 }
 
 function servosActuator() {
-    const [servos, setCupServos] = useState([useRef(), useRef(), useRef(), useRef(), useRef()])
-    const [actuatorVal, setActuator] = useState(useRef())
-
+    const cmd_handler = useCallback((cmd)=>{
+        console.log(cmd);
+        send_cmd(cmd);
+    })
     return(
         <Card>
             <Card.Header className = "h5">
-                Servos and Actuator
+                Carousel Position Reset
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
-                    {inputGo("Cup Servo 1", servos[0], "152px")}
-                    {inputGo("Cup Servo 2", servos[1], "152px")}
-                    {inputGo("Cup Servo 3", servos[2], "152px")}
-                    {inputGo("Capping Servo", servos[3], "152px")}
-                    {inputGo("Microscope Servo", servos[4], "152px")}
-                    {inputDouble("Actuator", "Extend", "Retract", actuatorVal, "152px")}
+                    <Button onClick={()=>{cmd_handler('cr -143')}}>RM</Button>
+                    <Button onClick={()=>{cmd_handler('cr -86.5')}}>RF</Button>
+                    <Button onClick={()=>{cmd_handler('cr 84')}}>LB</Button>
+                    <Button onClick={()=>{cmd_handler('cr 34.7')}}>LM</Button>
+                    <Button onClick={()=>{cmd_handler('cr -26.5')}}>LF</Button>
+                    <Button onClick={()=>{cmd_handler('cr 153.5')}}>RB</Button>
                 </div>
             </Card.Body>
         </Card>
@@ -114,32 +119,23 @@ function servosActuator() {
 }
 
 function fansPumps() {
-    const [fans, setTargets] = useState([useRef(), useRef(), useRef()])
-    const [pumps, setPumps] = useState([useRef(), useRef()])
-
-    const purgeButtonClick = () => {
-        console.log("Purging pumps...")
-    };
-
+    const cmd_handler = useCallback((cmd)=>{
+        console.log(cmd);
+        send_cmd(cmd);
+    });
     return(
         <Card>
             <Card.Header className = "h5">
-                Fans and Pumps
+                Dip Station Test Strip Viewing Servo-Darker
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
-                    {inputRun("Fan 1", fans[0], "80px")}
-                    {inputRun("Fan 2", fans[1], "80px")}
-                    {inputRun("Fan 3", fans[2], "80px")}
-                    {inputDouble("Pump 1", "Dispense", "Suction", pumps[0], "80px")}
-                    {inputDouble("Pump 2", "Dispense", "Suction", pumps[1], "80px")}
-                    <ButtonGroup>
-                        <Button 
-                            onClick = {purgeButtonClick}
-                        >
-                            Purge Pumps
-                        </Button>
-                    </ButtonGroup>
+                <Button onClick={()=>{cmd_handler('ds 0')}}>RM</Button>
+                <Button onClick={()=>{cmd_handler('ds 90')}}>RF</Button>
+                <Button onClick={()=>{cmd_handler('ds 200')}}>LB</Button>
+                <Button onClick={()=>{cmd_handler('ds 240')}}>LM</Button>
+                <Button onClick={()=>{cmd_handler('ds 270')}}>LF</Button>
+                <Button onClick={()=>{cmd_handler('ds 140')}}>RB</Button>
                 </div>
             </Card.Body>
         </Card>
@@ -147,97 +143,143 @@ function fansPumps() {
 }
 
 function carousel() {
-    const [pos, setPos] = useState(0.0)
-    const [targets, setTargets] = useState([useRef(), useRef()])
-
-    const autoRelButtonClick = () => {
-        var from = document.getElementById("autoFrom")
-        var fromText = from.options[from.selectedIndex].text
-        var to = document.getElementById("autoTo")
-        var toText = to.options[to.selectedIndex].text
-
-        console.log("Targetting relatively from " + fromText + " to " + toText + "...")
-    };
-
-    const prevCuvButtonClick = () => {
-        console.log("Going to previous cuvette...")
-    };
-
-    const nextCuvButtonClick = () => {
-        console.log("Going to next cuvette...")
-    };
-
+    const cmd_handler = useCallback((cmd)=>{
+        console.log(cmd);
+        send_cmd(cmd);
+    });
     return(
         <Card>
             <Card.Header className = "h5">
-                Carousel
+            Dip Station Test Strip Viewing Servo - Lighter
             </Card.Header>
             <Card.Body>
                 <div className = "d-grid">
-                    <InputGroup>
-                        <InputGroup.Text style = {{width: "137px"}}>Position</InputGroup.Text>
-                        <Form.Control 
-                            value = {pos}
-                        readOnly/>
-                    </InputGroup>
-                    {inputGo("Absolute Target", targets[0], "137px")}
-                    {inputGo("Relative Target", targets[1], "137px")}
-                    <InputGroup>
-                        <InputGroup.Text style = {{width: "137px"}}>Auto Relative</InputGroup.Text>
-                        <Form.Select id = "autoFrom">
-                            <option value = "From">From</option>
-                            <option value = "Separator 1">Separator 1</option>
-                            <option value = "Separator 1">Separator 2</option>
-                            <option value = "Separator 1">Separator 3</option>
-                            <option value = "Dosing 1">Dosing 1</option>
-                            <option value = "Dosing 2">Dosing 2</option>
-                            <option value = "Capping">Capping</option>
-                            <option value = "Observation">Observation</option>
-                        </Form.Select>
-                        <Form.Select id = "autoTo">
-                            <option value = "To">To</option>
-                            <option value = "Separator 1">Separator 1</option>
-                            <option value = "Separator 1">Separator 2</option>
-                            <option value = "Separator 1">Separator 3</option>
-                            <option value = "Dosing 1">Dosing 1</option>
-                            <option value = "Dosing 2">Dosing 2</option>
-                            <option value = "Capping">Capping</option>
-                            <option value = "Observation">Observation</option>
-                        </Form.Select>
-                        <Button 
-                            className="btn-success"
-                            onClick = {autoRelButtonClick}
-                        >
-                            Go
-                        </Button>
-                    </InputGroup>
-                    <ButtonGroup>
-                        <Button 
-                            className="btn-info"
-                            onClick = {prevCuvButtonClick}
-                        >
-                            Previous Cuvette
-                        </Button>
-                        <Button
-                            onClick = {nextCuvButtonClick}
-                        >
-                            Next Cuvette
-                        </Button>
-                    </ButtonGroup>
+                    
+                    <Button onClick={()=>{cmd_handler('ds 140')}}>RM</Button>
+                    <Button onClick={()=>{cmd_handler('ds 200')}}>RF</Button>
+                    <Button onClick={()=>{cmd_handler('ds 120')}}>LB (Corner)</Button>
+                    <Button onClick={()=>{cmd_handler('ds 160')}}>LM (Corner)</Button>
+                    <Button onClick={()=>{cmd_handler('ds 210')}}>LF (Corner)</Button>
+                    <Button onClick={()=>{cmd_handler('ds 230')}}>RB (Corner)</Button>
                 </div>
             </Card.Body>
         </Card>
+    );
+}
+function rosFeed() {
+    const [feed, setFeed] = useState([]);
+    const updateFeed = (log) => {
+        setFeed((prevFeed)=>{
+            var f = [...prevFeed]
+            var time = new Date().toTimeString().split(' ')[0];
+            f.push({t:time, d:log.data});
+            return(f)});
+    };
+    
+    rosNode.bio_sub.subscribe(updateFeed);
+    
+    
+    return(
+        <Card style = {{width: "100%"}}>
+            <Card.Header className='h5'>Rover Feed</Card.Header>
+            <Card.Body>
+                <div id = "ROSFeed" className = "feed" >{feed.map((e,i)=>{
+                    return(
+                        <div key={i}>
+                            {e.t}
+                            {" "}
+                            {e.d}
+                        </div>
+                    );
+                })}
+                </div>
+                <Button onClick={()=>{updateFeed({data: 'hello'})}}></Button>
+            </Card.Body>
+        </Card>
+    );
+}
+
+
+function serialCmdHandler(){
+    const cmd = createRef();
+    
+    const send_btn_click = useCallback(()=>{
+        if(cmd.current){
+            console.log(cmd.current.value);
+            send_cmd(cmd.current.value);
+        }
+    });
+
+    const handleKey = useCallback((e)=>{
+        if(e.key==='Enter'){
+            send_btn_click();
+        }
+    })
+
+    return(
+        <Card style={{width:"100%"}}>
+            <Card.Header className='h5'>Command</Card.Header>
+            <Card.Body>
+                <Form.Control name="Command" type="text" ref ={cmd} onKeyPress={handleKey}/>
+                
+                <div className='d-grid'>
+                <Button onClick={send_btn_click}>Send</Button>
+                <Button  variant='danger' onClick={()=>{send_cmd("stop")}}>Stop</Button>    
+                </div>
+                
+            
+                
+                
+            </Card.Body>
+        </Card>
+    );
+}
+
+function PTC_Slider(){
+    const [yaw,setYaw] = useState(90);
+    const [camPitch,setCamPitch] = useState(90);
+
+    return(
+        <Card>
+            <Card.Header className='h5'>Camera Control</Card.Header>
+            <Card.Body>
+                <InputGroup>
+                    Camera Pan
+                    <Form.Range onChange={(val)=>{setYaw(val.target.value*180/100)}}></Form.Range>
+                    <InputGroup.Text>{yaw}</InputGroup.Text>
+                </InputGroup>
+                <InputGroup>
+                    Camera Tilt
+                    <Form.Range onChange={(val)=>{setCamPitch(val.target.value*180/100)}}></Form.Range>
+                    <InputGroup.Text>{camPitch}</InputGroup.Text>
+                </InputGroup>
+
+                    
+                
+            </Card.Body>
+        </Card>
+        
+                
+        
+        
     );
 }
 
 function BiosensorControl() {
     return (
         <Container className="p-4">
+            <RosContextProvider>
             <div className = "card-deck">
                 {carousel()}
                 {fansPumps()}
                 {servosActuator()}
+                {PTC_Slider()}
             </div>
+            <div className='card-deck'>
+                {serialCmdHandler()}
+                {rosFeed()}
+            </div>
+            </RosContextProvider>
         </Container>
     );
 }
